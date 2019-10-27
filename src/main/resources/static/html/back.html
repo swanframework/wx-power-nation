@@ -8,10 +8,15 @@
     <script type="text/javascript" src="../jquery-easyui-1.7.0/jquery.min.js"></script>
     <script type="text/javascript" src="../jquery-easyui-1.7.0/jquery.easyui.min.js"></script>
     <!-- 自定义脚本和文件 -->
-    <link rel="stylesheet" type="text/css" href="../custom/css/index.css">
-    <script type="text/javascript" src="../custom/js/insertAtCaret.js"></script>
+    <link rel="stylesheet" type="text/css" href="./index.css">
+    <script type="text/javascript" src="./insertAtCaret.js"></script>
 </head>
 <body class="easyui-layout" style="width: 100%">
+<!-- 头部: 目录选择 -->
+<div data-options="region:'north',border:false" style="height:60px;background:#B3DFDA;padding:10px; text-align: center">
+    <input id="file" class="easyui-searchbox" data-options="prompt:'请输入需要扫描的目录路径',searcher:doSearch" style="width:600px" buttonText="选择目录" >
+
+</div>
 
 <!-- 左侧: 图片预览区 -->
 <div id="left" data-options="region:'west',collapsible:false, title:'图片预览'">
@@ -46,7 +51,7 @@
 <script type="text/javascript">
     var focusId = "";
     var answer = "";
-    var imageId = 76;
+    var imageId = "";
 
     // 光标处插入文本
     function insert(str){
@@ -87,8 +92,7 @@
             method:"POST",
             data: params ,
             success: function(result) {
-                // alert(result);
-                loadImage(imageId + 1);
+                alert(result);
             }
         })
     }
@@ -104,12 +108,10 @@
                 $('#previewImg').attr('src', "/image/" + result.id);
 
                 // 初始化标题
-                $('#title').empty();
                 result.titleList.forEach(function (val, idx) {
                     $('#title').append("<li><input id='" + result.id + "-" + idx +"' type='text' value='" + val + "' onfocus='fc(this)'></li>")
                 });
                 // 初始化答案
-                $('#answer').empty();
                 result.answerList.forEach(function (val, idx) {
                     $('#answer').append("<li onclick='selectAnswer(this)'><label>" + val + "</label></li>")
                 });
@@ -138,7 +140,7 @@
             focusId = $(this).attr("id");
         });
 
-        loadImage(imageId);
+        loadImage(16);
     });
 
 </script>

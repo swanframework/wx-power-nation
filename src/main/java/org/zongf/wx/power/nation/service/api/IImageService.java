@@ -24,7 +24,7 @@ public interface IImageService {
     boolean delete(Long id);
 
     // 批量保存图片
-    boolean batchSave(String path, String type);
+    boolean batchSave(String ak, String sk, String path, String type);
 
 
 }

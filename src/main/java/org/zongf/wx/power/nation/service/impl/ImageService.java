@@ -45,7 +45,7 @@ public class ImageService implements IImageService {
     }
 
     @Override
-    public boolean batchSave(String path, String type) {
+    public boolean batchSave(String ak, String sk, String path, String type) {
 
         // 1. 比较数据库去重
         List<String> fileNames = FileUtils.getFileNames(path);
@@ -67,7 +67,7 @@ public class ImageService implements IImageService {
 
         // 2. 多线程调用百度ocr
         if (imagePOList.size() > 0) {
-            OcrTask.doOcrTask(imagePOList);
+            OcrTask.doOcrTask(ak, sk, imagePOList);
         }
 
         return false;

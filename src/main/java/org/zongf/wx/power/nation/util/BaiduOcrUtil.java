@@ -37,9 +37,7 @@ public class BaiduOcrUtil {
     // 含位置信息地址
     private static final String URL_LOCATION_OCR = "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate";
 
-    // 百度云应用秘钥sk 和 ak
-    private static final String SK = "5ErgM969o3R91ETGcKLtgeVGlsNbcbuP";
-    private static final String AK = "8RQ8I8ywzkGmOiDUUlVf1VCT";
+
 
 	public BaiduOcrUtil() {
         super();
@@ -57,12 +55,12 @@ public class BaiduOcrUtil {
      * @author zongf
      * @created 2019-10-25
      */
-    public static AccessTokenResponse requestToken(){
+    public static AccessTokenResponse requestToken(String ak, String sk){
         // 拼接请求参数
         StringBuffer sb = new StringBuffer();
         sb.append("grant_type=client_credentials")
-            .append("&client_id=").append(AK)
-            .append("&client_secret=").append(SK);
+            .append("&client_id=").append(ak)
+            .append("&client_secret=").append(sk);
 
         // 发送请求
         String result = BaiduOcrUtil.httpPost(URL_REQUEST_TOKEN, sb.toString());
@@ -77,8 +75,8 @@ public class BaiduOcrUtil {
      * @author zongf
      * @created 2019-10-25
      */
-    public static OcrResponse doBasicOcr(byte[] bytes){
-        return doOcr(bytes, URL_BASIC_OCR);
+    public static OcrResponse doBasicOcr(String ak, String sk, byte[] bytes){
+        return doOcr(ak, sk, bytes, URL_BASIC_OCR);
     }
 
     /** 提取图片中的文字, 包含文字位置信息
@@ -88,8 +86,8 @@ public class BaiduOcrUtil {
      * @author zongf
      * @created 2019-10-25
      */
-    public static OcrResponse doLocationOcr(byte[] bytes) {
-        return doOcr(bytes, URL_LOCATION_OCR);
+    public static OcrResponse doLocationOcr(String ak, String sk, byte[] bytes) {
+        return doOcr(ak, sk, bytes, URL_LOCATION_OCR);
     }
 
 
@@ -100,12 +98,12 @@ public class BaiduOcrUtil {
      * @author zongf
      * @created 2019-10-25
      */
-    private static OcrResponse doOcr(byte[] bytes, String url){
+    private static OcrResponse doOcr(String ak, String sk, byte[] bytes, String url){
 
         try{
 
             // 获取token
-            AccessTokenResponse accessTokenResponse = requestToken();
+            AccessTokenResponse accessTokenResponse = requestToken(ak,sk);
 
             // 拼接请求地址
             String ocrUrl = url + "?access_token=" + accessTokenResponse.getAccess_token();

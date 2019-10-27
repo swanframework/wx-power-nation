@@ -27,9 +27,15 @@ public class OcrRunnable implements Runnable{
 
     private ImageMapper imageMapper;
 
-    public OcrRunnable(ConcurrentLinkedQueue<ImagePO> imageQueue) {
+    private String ak;
+
+    private String sk;
+
+    public OcrRunnable(String ak, String sk, ConcurrentLinkedQueue<ImagePO> imageQueue) {
         this.imageQueue = imageQueue;
         this.imageMapper = SpringBeanUtil.getBean(ImageMapper.class);
+        this.ak = ak;
+        this.sk = sk;
     }
 
     @Override
@@ -40,7 +46,7 @@ public class OcrRunnable implements Runnable{
         while ((imagePO = imageQueue.poll()) != null) {
 
             // 进行百度ocr 解析
-            OcrResponse ocrResponse = BaiduOcrUtil.doBasicOcr(imagePO.getContent());
+            OcrResponse ocrResponse = BaiduOcrUtil.doBasicOcr(ak, sk, imagePO.getContent());
 
             // 处理第一行信息, 如果以NB开头, 则表示为时间状态栏
             String firstLine = ocrResponse.getWords_result().get(0).getWords();

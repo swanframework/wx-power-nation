@@ -52,7 +52,8 @@ public class QuestionInfoFactory {
             // 如果是答案行(非标题行), 则进行判断是否要开始进入题目行
             if(!beginTitleLine){
                 if (line.endsWith("。") || line.endsWith("？") || line.endsWith("！")
-                        || line.endsWith("?") || line.endsWith("!")) {
+                        || line.endsWith("?") || line.endsWith("!")
+                        || line.endsWith(")") || line.endsWith("）")) {
                     beginTitleLine = true;
                 }
             }
