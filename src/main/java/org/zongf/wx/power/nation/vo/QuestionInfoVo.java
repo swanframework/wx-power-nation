@@ -11,7 +11,7 @@ import java.util.List;
 public class QuestionInfoVo {
 
     // 图片id
-    private Integer id;
+    private Long id;
 
     // 图片路径
     private String imageName;
@@ -26,24 +26,24 @@ public class QuestionInfoVo {
         super();
     }
 
-	public QuestionInfoVo(Integer id, String imagePath, List<String> titleList, List<String> answerList) {
+	public QuestionInfoVo(Long id, String imageName, List<String> titleList, List<String> answerList) {
         super();
 		this.id = id;
-		this.imageName = imagePath;
+		this.imageName = imageName;
 		this.titleList = titleList;
 		this.answerList = answerList;
     }
 
-    public void setId(Integer id){
+    public void setId(Long id){
 		this.id=id;
 	}
 
-	public Integer getId(){
+	public Long getId(){
 		return this.id;
 	}
 
     public void setImageName(String imageName){
-		this.imageName = imageName;
+		this.imageName=imageName;
 	}
 
 	public String getImageName(){

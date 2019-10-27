@@ -51,7 +51,7 @@
 <script type="text/javascript">
     var focusId = "";
     var answer = "";
-    var questionId = "";
+    var imageId = "";
 
     // 光标处插入文本
     function insert(str){
@@ -85,11 +85,11 @@
             return;
         }
 
-        var params = "id=" + questionId + "&title=" + title + "&answer=" + answer;
+        var params = "&title=" + title + "&answer=" + answer + "&imageId=" + imageId;
 
         $.ajax({
-            url:"/question/" + questionId,
-            method:"PUT",
+            url:"/question",
+            method:"POST",
             data: params ,
             success: function(result) {
                 alert(result);
@@ -99,13 +99,13 @@
 
     function loadImage(id){
         $.ajax({
-            url:"/question/" + id,
+            url:"/image/info/" + id,
             method:"GET",
             success: function(result) {
                 // 保存id
-                questionId = result.id;
+                imageId = result.id;
                 // 替换图片
-                $('#previewImg').attr('src', "/" + result.imageName);
+                $('#previewImg').attr('src', "/image/" + result.id);
 
                 // 初始化标题
                 result.titleList.forEach(function (val, idx) {
@@ -140,7 +140,7 @@
             focusId = $(this).attr("id");
         });
 
-        loadImage(11);
+        loadImage(16);
     });
 
 </script>

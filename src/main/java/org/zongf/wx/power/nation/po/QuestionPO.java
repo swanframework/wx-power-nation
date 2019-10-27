@@ -13,20 +13,16 @@ import java.util.Date;
 public class QuestionPO implements Serializable {
 
 	// 主键id
-	private Integer id;
+	private Long id;
 
-	// 图片路径
-	private String imageName;
+	// 图片id
+	private Long imageId;
 
     // 题目
     private String title;
 
     // 答案
     private String answer;
-
-    // 百度ocr解析结果,用于去重
-    @JSONField(serialize=false)
-    private String ocr;
 
     // 新增时间
     @JSONField(format="yyyy.MM.dd")
@@ -36,30 +32,29 @@ public class QuestionPO implements Serializable {
         super();
     }
 
-	public QuestionPO(Integer id, String imagePath, String title, String answer, String ocr, Date createTime) {
+	public QuestionPO(Long id, Long imageId, String title, String answer, Date createTime) {
         super();
 		this.id = id;
-		this.imageName = imagePath;
+		this.imageId = imageId;
 		this.title = title;
 		this.answer = answer;
-		this.ocr = ocr;
 		this.createTime = createTime;
     }
 
-    public void setId(Integer id){
+    public void setId(Long id){
 		this.id=id;
 	}
 
-	public Integer getId(){
+	public Long getId(){
 		return this.id;
 	}
 
-    public void setImageName(String imageName){
-		this.imageName = imageName;
+    public void setImageId(Long imageId){
+		this.imageId=imageId;
 	}
 
-	public String getImageName(){
-		return this.imageName;
+	public Long getImageId(){
+		return this.imageId;
 	}
 
     public void setTitle(String title){
@@ -78,14 +73,6 @@ public class QuestionPO implements Serializable {
 		return this.answer;
 	}
 
-    public void setOcr(String ocr){
-		this.ocr=ocr;
-	}
-
-	public String getOcr(){
-		return this.ocr;
-	}
-
     public void setCreateTime(Date createTime){
 		this.createTime=createTime;
 	}
@@ -95,7 +82,7 @@ public class QuestionPO implements Serializable {
 	}
 
     public String toString() {
-		return getClass().getSimpleName() + "@" + hashCode() + ": {id:" + id + ", imageName:" + imageName + ", title:" + title + ", answer:" + answer + ", ocr:" + ocr + ", createTime:" + createTime  + "}";
+		return getClass().getSimpleName() + "@" + hashCode() + ": {id:" + id + ", imageId:" + imageId + ", title:" + title + ", answer:" + answer + ", createTime:" + createTime  + "}";
 	}
 
 }

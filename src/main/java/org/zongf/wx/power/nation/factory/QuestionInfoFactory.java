@@ -2,7 +2,7 @@ package org.zongf.wx.power.nation.factory;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
-import org.zongf.wx.power.nation.po.QuestionPO;
+import org.zongf.wx.power.nation.po.ImagePO;
 import org.zongf.wx.power.nation.vo.QuestionInfoVo;
 import org.zongf.wx.power.nation.vo.ocr.OcrResponse;
 
@@ -18,12 +18,12 @@ import java.util.Stack;
  */
 public class QuestionInfoFactory {
 
-    public static QuestionInfoVo create(QuestionPO questionPO) {
+    public static QuestionInfoVo create(ImagePO imagePO) {
 
-        if(questionPO == null) return null;
+        if(imagePO == null) return null;
 
         // 反向序列化ocr 结果
-        OcrResponse ocrResponse = JSONObject.parseObject(questionPO.getOcr(), OcrResponse.class);
+        OcrResponse ocrResponse = JSONObject.parseObject(imagePO.getOcr(), OcrResponse.class);
 
         // 题目列表
         List<String> titleList = new ArrayList<>();
@@ -71,8 +71,8 @@ public class QuestionInfoFactory {
 
         // 转换对象
         QuestionInfoVo questionInfoVo = new QuestionInfoVo();
-        questionInfoVo.setId(questionPO.getId());
-        questionInfoVo.setImageName(questionPO.getImageName());
+        questionInfoVo.setId(imagePO.getId());
+        questionInfoVo.setImageName(imagePO.getName());
         questionInfoVo.setTitleList(titleList);
         questionInfoVo.setAnswerList(answerList);
         return questionInfoVo;

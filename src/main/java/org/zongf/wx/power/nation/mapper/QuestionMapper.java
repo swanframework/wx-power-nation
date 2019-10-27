@@ -19,9 +19,6 @@ public interface QuestionMapper {
     // 删除
     boolean delete(Long id);
 
-    // 修改
-    long update(QuestionPO questionPO);
-
     // 通过id查询
     QuestionPO findById(Long id);
 
@@ -30,11 +27,5 @@ public interface QuestionMapper {
 
     // 清空表
     void clear();
-
-    // 是否存在
-    boolean isExsists(String filePath);
-
-    // 更新答案
-    boolean updateAnswer(QuestionPO questionPO);
 
 }
