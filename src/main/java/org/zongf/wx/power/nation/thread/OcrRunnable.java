@@ -52,6 +52,13 @@ public class OcrRunnable implements Runnable{
                 String ocr = JSONObject.toJSONString(ocrResponse);
                 // 如果不存在相同的ocr, 则入库
 
+                // 如果图片中包含"结束本局"关键字, 则为错误图片,忽略
+                if (ocr.contains("结束本局")) {
+                    log.info("错误图片, 图片信息:{}", imagePO);
+                    continue;
+                }
+
+                // 如果图片中已存在相同的ocr, 则忽略
                 if (imageMapper.hasSameOcr(imagePO.getType(), ocr)) {
                     log.info("保存图片失败, 图片库中已存在相同类型且相同ocr的记录, 图片信息:{}", imagePO);
                 }else {
