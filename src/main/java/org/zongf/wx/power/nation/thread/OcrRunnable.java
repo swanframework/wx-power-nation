@@ -1,10 +1,11 @@
 package org.zongf.wx.power.nation.thread;
 
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zongf.wx.power.nation.mapper.ImageMapper;
 import org.zongf.wx.power.nation.mapper.QuestionMapper;
+import org.zongf.wx.power.nation.po.ImagePO;
 import org.zongf.wx.power.nation.po.QuestionPO;
 import org.zongf.wx.power.nation.util.BaiduOcrUtil;
 import org.zongf.wx.power.nation.util.SpringBeanUtil;
@@ -22,24 +23,24 @@ public class OcrRunnable implements Runnable{
 
     private Logger log = LoggerFactory.getLogger(OcrRunnable.class);
 
-    private ConcurrentLinkedQueue<String> fileQueue;
+    private ConcurrentLinkedQueue<ImagePO> imageQueue;
 
-    private QuestionMapper questionMapper;
+    private ImageMapper imageMapper;
 
-    public OcrRunnable(ConcurrentLinkedQueue<String> fileQueue) {
-        this.fileQueue = fileQueue;
-        this.questionMapper = SpringBeanUtil.getBean(QuestionMapper.class);
+    public OcrRunnable(ConcurrentLinkedQueue<ImagePO> imageQueue) {
+        this.imageQueue = imageQueue;
+        this.imageMapper = SpringBeanUtil.getBean(ImageMapper.class);
     }
 
     @Override
     public void run() {
 
-        String imagePath = null;
+        ImagePO imagePO = null;
 
-        while ((imagePath = fileQueue.poll()) != null) {
+        while ((imagePO = imageQueue.poll()) != null) {
 
             // 进行百度ocr 解析
-            OcrResponse ocrResponse = BaiduOcrUtil.doBasicOcr(imagePath);
+            OcrResponse ocrResponse = BaiduOcrUtil.doBasicOcr(imagePO.getContent());
 
             // 处理第一行信息, 如果以NB开头, 则表示为时间状态栏
             String firstLine = ocrResponse.getWords_result().get(0).getWords();
@@ -48,13 +49,18 @@ public class OcrRunnable implements Runnable{
             }
 
             try {
-                QuestionPO questionPO = new QuestionPO();
-                questionPO.setImageName(StringUtils.substringAfterLast(imagePath, "/"));
-                questionPO.setCreateTime(new Date());
-                questionPO.setOcr(JSONObject.toJSONString(ocrResponse));
-                this.questionMapper.save(questionPO);
+                String ocr = JSONObject.toJSONString(ocrResponse);
+                // 如果不存在相同的ocr, 则入库
+
+                if (imageMapper.hasSameOcr(imagePO.getType(), ocr)) {
+                    log.info("保存图片失败, 图片库中已存在相同类型且相同ocr的记录, 图片信息:{}", imagePO);
+                }else {
+                    imagePO.setOcr(ocr);
+                    imagePO.setCreateTime(new Date());
+                    this.imageMapper.save(imagePO);
+                }
             } catch (Exception ex) {
-                log.info("保存图片失败, 图片路径:{}, 失败原因:{}", imagePath, ex.getMessage());
+                log.info("保存图片失败, 图片路径:{}, 失败原因:{}", imagePO, ex.getMessage());
             }
         }
     }

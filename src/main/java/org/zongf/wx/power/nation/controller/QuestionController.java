@@ -48,7 +48,7 @@ public class QuestionController {
         log.info("在目录{}中共检测到{}个新图片",dirPath, incrementFileNames.size());
 
         // 开始解析
-        OcrTask.doOcrTask(incrementFileNames);
+//        OcrTask.doOcrTask(incrementFileNames);
 
         return "共检测到" + incrementFileNames.size() + "张新图片, 后台正在进行ocr解析";
     }

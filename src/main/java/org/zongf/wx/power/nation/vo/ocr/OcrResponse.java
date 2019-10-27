@@ -1,5 +1,7 @@
 package org.zongf.wx.power.nation.vo.ocr;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.List;
 
 /**
@@ -9,6 +11,7 @@ import java.util.List;
  */
 public class OcrResponse {
 
+	@JSONField(serialize = false)
     private long log_id;
 
     private int words_result_num;

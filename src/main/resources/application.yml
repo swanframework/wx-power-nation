@@ -23,3 +23,6 @@ mybatis:
   config-location: classpath:config/mybatis-config.xml
   mapper-locations: classpath:mappers/*Mapper.xml
   type-aliases-package: org.zongf.wx.power.nation.po
+logging:
+  level:
+    root: info

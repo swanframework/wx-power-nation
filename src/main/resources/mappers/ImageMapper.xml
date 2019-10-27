@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 命名空间使用对应的Mapper类全限定名称 -->
+<mapper namespace="org.zongf.wx.power.nation.mapper.ImageMapper">
+
+    <!-- 定义所有字段 -->
+    <sql id="columns_all">
+        id, name, content, type, status, ocr, createTime
+    </sql>
+
+    <!-- 新增 -->
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        insert into s_image(<include refid="columns_all" />)
+        values (null, #{name}, #{content}, #{type}, #{status}, #{ocr}, #{createTime})
+    </insert>
+
+    <!-- 删除 -->
+    <delete id="delete">
+        delete from s_image where id = #{id}
+    </delete>
+
+
+    <!-- 通过id 查询实体  -->
+    <select id="findById" resultType="org.zongf.wx.power.nation.po.ImagePO"  >
+        select <include refid="columns_all" />
+        from s_image
+        where id = #{id}
+    </select>
+
+    <!-- 分页查询 -->
+    <select id="queryByPager" resultType="org.zongf.wx.power.nation.po.ImagePO">
+        select <include refid="columns_all" />
+        from s_image emp
+        where type = #{type}, status = #{status}
+    </select>
+
+    <select id="hasSameName" resultType="java.lang.Boolean">
+        select count(id)
+        from s_image
+        where name = #{name}
+    </select>
+
+    <select id="hasSameOcr" resultType="java.lang.Boolean">
+        select count(id)
+        from s_image
+        where type = #{type} and ocr = #{ocr}
+    </select>
+
+
+    <!-- 清空表中数据, 同时重置自增序列从0开始 -->
+    <delete id="clear">
+        truncate table s_image
+    </delete>
+</mapper>

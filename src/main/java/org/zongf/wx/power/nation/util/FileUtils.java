@@ -30,4 +30,19 @@ public class FileUtils {
         }
     }
 
+    /** 获取文件字节
+     * @param filePath 文件路径
+     * @return byte[]
+     * @since 1.0
+     * @author zongf
+     * @created 2019-10-27
+     */
+    public static byte[] getFileBytes(String filePath) {
+        try {
+            return Files.readAllBytes(Paths.get(filePath));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

@@ -38,8 +38,8 @@ public class BaiduOcrUtil {
     private static final String URL_LOCATION_OCR = "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate";
 
     // 百度云应用秘钥sk 和 ak
-    private static final String SK = "TODO";
-    private static final String AK = "TODO";
+    private static final String SK = "5ErgM969o3R91ETGcKLtgeVGlsNbcbuP";
+    private static final String AK = "8RQ8I8ywzkGmOiDUUlVf1VCT";
 
 	public BaiduOcrUtil() {
         super();
@@ -71,39 +71,38 @@ public class BaiduOcrUtil {
     }
 
     /** 提取图片中的文字, 不包含文字位置信息
-     * @param imageFilePath 图片路径
+     * @param bytes 图片路径
      * @return OcrRunnable
      * @since 1.0
      * @author zongf
      * @created 2019-10-25
      */
-    public static OcrResponse doBasicOcr(String imageFilePath){
-        return doOcr(imageFilePath, URL_BASIC_OCR);
+    public static OcrResponse doBasicOcr(byte[] bytes){
+        return doOcr(bytes, URL_BASIC_OCR);
     }
 
     /** 提取图片中的文字, 包含文字位置信息
-     * @param imageFilePath 图片路径
+     * @param bytes 图片路径
      * @return OcrRunnable
      * @since 1.0
      * @author zongf
      * @created 2019-10-25
      */
-    public static OcrResponse doLocationOcr(String imageFilePath) {
-        return doOcr(imageFilePath, URL_LOCATION_OCR);
+    public static OcrResponse doLocationOcr(byte[] bytes) {
+        return doOcr(bytes, URL_LOCATION_OCR);
     }
 
+
     /** 图片进行ocr 文件转换
-     * @param imageFilePath 图片路径
      * @param url ocr连接地址, 不同精度的ocr, 链接地址不同
      * @return OcrRunnable
      * @since 1.0
      * @author zongf
      * @created 2019-10-25
      */
-    private static OcrResponse doOcr(String imageFilePath, String url){
+    private static OcrResponse doOcr(byte[] bytes, String url){
 
         try{
-            log.info("开始进行百度OCR解析, 解析图片:{}", imageFilePath);
 
             // 获取token
             AccessTokenResponse accessTokenResponse = requestToken();
@@ -112,7 +111,7 @@ public class BaiduOcrUtil {
             String ocrUrl = url + "?access_token=" + accessTokenResponse.getAccess_token();
 
             // 获取图片Base64 字节流
-            String image = URLEncoder.encode(BaiduOcrUtil.getBase64(imageFilePath), "UTF-8");
+            String image = URLEncoder.encode(BaiduOcrUtil.getBase64(bytes), "UTF-8");
 
             // 拼接参数
             StringBuffer sb = new StringBuffer();
@@ -122,8 +121,7 @@ public class BaiduOcrUtil {
             // 调用请求
             String result = BaiduOcrUtil.httpPost(ocrUrl, sb.toString());
 
-            log.info("图片orc解析完成, 图片:{}, 结果:{}", imageFilePath, result);
-
+            log.info("图片orc解析完成, 结果:{}", result);
 
             return JSONObject.parseObject(result, OcrResponse.class);
         } catch (Exception e) {
@@ -162,19 +160,14 @@ public class BaiduOcrUtil {
     }
 
     /** 获取文件字节流, 进行Base64 编码
-     * @param filePath 文件路径
+     * @param bytes 文件字节数组
      * @return String 文件的Base64 编码字符串
      * @since 1.0
      * @author zongf
      * @created 2019-10-25
      */
-    private static String getBase64(String filePath) {
-        try {
-            byte[] bytes = Files.readAllBytes(Paths.get(filePath));
-            byte[] encodeBytes = Base64.getEncoder().encode(bytes);
-            return new String(encodeBytes);
-        } catch (Exception e) {
-            throw new OcrException("获取文件Base64编码字节流异常!", e);
-        }
+    private static String getBase64(byte[] bytes) {
+        byte[] base64 = Base64.getEncoder().encode(bytes);
+        return new String(base64);
     }
 }

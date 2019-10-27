@@ -106,6 +106,7 @@
                 questionId = result.id;
                 // 替换图片
                 $('#previewImg').attr('src', "/" + result.imageName);
+
                 // 初始化标题
                 result.titleList.forEach(function (val, idx) {
                     $('#title').append("<li><input id='" + result.id + "-" + idx +"' type='text' value='" + val + "' onfocus='fc(this)'></li>")
