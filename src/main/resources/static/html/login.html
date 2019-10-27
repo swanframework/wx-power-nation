@@ -11,10 +11,10 @@
         .dowebok { position: absolute; left: 50%; top: 50%; width: 400px; height: 500px; margin: -300px 0 0 -215px; border: 1px solid #fff; border-radius: 20px; overflow: hidden;}
         .logo { width: 140px; height: 140px; margin: 30px auto 40px; background: url(../custom/images/logo.png) 0 0 no-repeat; }
         .form-item { position: relative; width: 300px; margin: 0 auto; padding-bottom: 30px;}
-        .form-item input { width: 228px; height: 48px; padding-left: 70px; border: 1px solid #fff; border-radius: 25px; font-size: 18px; color: #fff; background-color: transparent; outline: none;}
-        .form-item button { width: 300px; height: 50px; border: 0; border-radius: 25px; font-size: 18px; color: #1f6f4a; outline: none; cursor: pointer; background-color: #fff; }
-        #username { background: url(../custom/images/emil.png) 20px 14px no-repeat; }
-        #password { background: url(../custom/images/password.png) 23px 11px no-repeat; }
+        .form-item input { width: 228px; height: 48px; padding-left: 65px; border: 1px solid #fff; border-radius: 25px; font-size: 18px; color: #fff; background-color: transparent; outline: none;}
+        .form-item button { width: 295px; height: 50px; border: 0; border-radius: 25px; font-size: 18px; color: #1f6f4a; outline: none; cursor: pointer; background-color: #fff; }
+        #ak { background: url(../custom/images/password.png) 23px 11px no-repeat; }
+        #sk { background: url(../custom/images/password.png) 23px 11px no-repeat; }
         .tip { display: none; position: absolute; left: 20px; top: 52px; font-size: 14px; color: #f50; }
         .dowebok ::-webkit-input-placeholder { font-size: 18px; line-height: 1.4; color: #fff;}
         .dowebok :-moz-placeholder { font-size: 18px; line-height: 1.4; color: #fff;}
@@ -27,17 +27,35 @@
 <div class="dowebok">
     <div class="logo"></div>
     <div class="form-item">
-        <input id="username" type="text" autocomplete="off" placeholder="百度云平台ak">
-        <p class="tip">请输入合法的邮箱地址</p>
+        <input id="ak" type="password" autocomplete="off" placeholder="百度云平台ak">
     </div>
     <div class="form-item">
-        <input id="password" type="password" autocomplete="off" placeholder="百度云平台sk">
-        <p class="tip">邮箱或密码不正确</p>
+        <input id="sk" type="password" autocomplete="off" placeholder="百度云平台sk">
     </div>
-    <div class="form-item"><button id="submit">登 录</button></div>
+    <div class="form-item"><button id="submit" onclick="login()">登 录</button></div>
 </div>
-<script src="images/jquery.min.js"></script>
+<script src="../jquery-easyui-1.7.0/jquery.min.js"></script>
 <script>
+    function login(){
+
+        var ak = $("#ak").val();
+        var sk = $("#sk").val();
+
+        // 向服务器发送请求
+        $.ajax({
+            url:"/login",
+            method:"GET",
+            data:"ak=" + ak + "&sk=" + sk,
+            success: function(result) {
+                if (result = "success") {
+                    window.location.href = "/html/index.html";
+                }else{
+                    alert("验证失败!");
+                }
+            }
+        })
+
+    }
     $(function () {
         $('input').val('')
         $('#submit').on('click', function () {
