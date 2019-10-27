@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Full Layout - jQuery EasyUI Demo</title>
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.7.0/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.7.0/themes/icon.css">
+    <script type="text/javascript" src="../jquery-easyui-1.7.0/jquery.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.7.0/jquery.easyui.min.js"></script>
+    <!-- 自定义脚本和文件 -->
+    <link rel="stylesheet" type="text/css" href="./index.css">
+    <script type="text/javascript" src="./insertAtCaret.js"></script>
+</head>
+<body class="easyui-layout" style="width: 100%">
+<!-- 头部: 目录选择 -->
+<div data-options="region:'north',border:false" style="height:60px;background:#B3DFDA;padding:10px; text-align: center">
+    <input id="file" class="easyui-searchbox" data-options="prompt:'请输入需要扫描的目录路径',searcher:doSearch" style="width:600px" buttonText="选择目录" >
+
+</div>
+
+<!-- 左侧: 图片预览区 -->
+<div id="left" data-options="region:'west',collapsible:false, title:'图片预览'">
+    <!-- 900x1600  -->
+    <img id="previewImg"><br/>
+</div>
+
+<!-- 右侧: 图片解析区 -->
+<div id="cnt" data-options="region:'center',title:'解析结果'">
+    <div style="float: left">
+        <!-- 截屏边框 -->
+        <div id="border">
+            <div id="signle"></div> <!-- 头部信号区域 -->
+
+            <div id="question"> <!-- 题目背景 -->
+                <ul id="title">
+                </ul>
+                <ul id="answer">
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="btns">
+        <button type="button" class="textbox" onclick="insert('###')">插入###</button>
+        <button type="button" class="textbox" onclick="insert('，')">插入，</button>
+        <button type="button" class="textbox" onclick="finish()" style="margin-top: 100px">完成</button>
+    </div>
+</div>
+
+
+</body>
+<script type="text/javascript">
+    var focusId = "";
+    var answer = "";
+    var questionId = "";
+
+    // 光标处插入文本
+    function insert(str){
+        $("#" + focusId).insertAtCaret(str);
+    }
+    
+    function doSearch(value) {
+        // 向服务器发送请求
+        $.ajax({
+            url:"/question/parse",
+            method:"POST",
+            data:"dirPath=" +value,
+            success: function(result) {
+                alert(result);
+            }
+        })
+
+    }
+
+    // 完成选择
+    function finish(){
+        var title = "";
+        // 获取标题
+        $("#title li input").each(function () {
+            title += $(this).val().trim();
+        });
+
+        // 如果未选择答案,则抛出提示
+        if(answer == ""){
+            alert("请选择答案");
+            return;
+        }
+
+        var params = "id=" + questionId + "&title=" + title + "&answer=" + answer;
+
+        $.ajax({
+            url:"/question/" + questionId,
+            method:"PUT",
+            data: params ,
+            success: function(result) {
+                alert(result);
+            }
+        })
+    }
+
+    function loadImage(id){
+        $.ajax({
+            url:"/question/" + id,
+            method:"GET",
+            success: function(result) {
+                // 保存id
+                questionId = result.id;
+                // 替换图片
+                $('#previewImg').attr('src', "/" + result.imageName);
+                // 初始化标题
+                result.titleList.forEach(function (val, idx) {
+                    $('#title').append("<li><input id='" + result.id + "-" + idx +"' type='text' value='" + val + "' onfocus='fc(this)'></li>")
+                });
+                // 初始化答案
+                result.answerList.forEach(function (val, idx) {
+                    $('#answer').append("<li onclick='selectAnswer(this)'><label>" + val + "</label></li>")
+                });
+            }
+        })
+    }
+
+    // 选择答案, 变更颜色
+    function selectAnswer(v){
+        $("#answer li").each(function () {
+            $(this).css("background-color","#FFF");
+
+        });
+        // 获取选中对象的文本
+        answer = $($(v).children("label").get(0)).text();
+        // 更改颜色
+        $(v).css("background-color","#3DC074");
+    }
+
+    function fc(v){
+        focusId = $(v).attr("id");
+    }
+
+    $(function () {
+        $("input").focus(function () {
+            focusId = $(this).attr("id");
+        });
+
+        loadImage(11);
+    });
+
+</script>
+</html>

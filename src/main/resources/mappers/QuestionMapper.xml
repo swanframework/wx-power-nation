@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 命名空间使用对应的Mapper类全限定名称 -->
+<mapper namespace="org.zongf.wx.power.nation.mapper.QuestionMapper">
+
+    <!-- 定义所有字段 -->
+    <sql id="columns_all">
+        id, imageName, title, answer, ocr, createTime
+    </sql>
+
+    <!-- 新增 -->
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        insert into s_question(<include refid="columns_all" />)
+        values (null, #{imageName}, #{title}, #{answer}, #{ocr}, #{createTime})
+    </insert>
+
+    <!-- 删除 -->
+    <delete id="delete">
+        delete from s_question where id = #{id}
+    </delete>
+
+    <!-- 更新 -->
+    <update id="update">
+        update s_question
+        set id = #{id},  title=#{title}, answer =#{answer}
+        where id = #{id}
+    </update>
+    <update id="updateAnswer">
+        update s_question
+        set id = #{id},  title=#{title}, answer =#{answer}
+        where id = #{id}
+    </update>
+
+    <!-- 通过id 查询实体  -->
+    <select id="findById" resultType="QuestionPO"  >
+        select <include refid="columns_all" />
+        from s_question
+        where id = #{id}
+    </select>
+
+    <!-- 分页查询 -->
+    <select id="queryByPager" resultType="QuestionPO">
+        select <include refid="columns_all" />
+        from s_question emp
+    </select>
+
+    <!-- 判断图片是否已存在 -->
+    <select id="isExsists" resultType="java.lang.Boolean">
+        select count(*)
+        from s_question
+        where imageName = #{imageName}
+    </select>
+
+    <!-- 清空表中数据, 同时重置自增序列从0开始 -->
+    <delete id="clear">
+        truncate table s_question
+    </delete>
+</mapper>
