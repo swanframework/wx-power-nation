@@ -17,6 +17,9 @@ public interface ImageMapper {
     // 保存
     boolean save(ImagePO imagePO);
 
+    // 更新
+    boolean update(ImagePO imagePO);
+
     // 删除
     boolean delete(Long id);
 

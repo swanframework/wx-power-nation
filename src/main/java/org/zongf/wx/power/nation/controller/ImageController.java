@@ -1,5 +1,7 @@
 package org.zongf.wx.power.nation.controller;
 
+import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
+import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,10 +36,16 @@ public class ImageController {
     }
 
     @ResponseBody
-    @GetMapping("/info/{id}")
-    public QuestionInfoVo getImageInfo(@PathVariable long id) throws Exception {
-        ImagePO imagePO = this.imageMapper.findById(id);
-        return QuestionInfoFactory.create(imagePO);
+    @GetMapping("/info")
+    public QuestionInfoVo getImageInfo() throws Exception {
+
+        PageList<ImagePO> pager = this.imageMapper.queryByPager(new PageBounds(1, 1), "1", "0");
+
+        QuestionInfoVo questionInfoVo = QuestionInfoFactory.create(pager.get(0));
+
+        questionInfoVo.setLeft(pager.getPaginator().getTotalCount());
+
+        return questionInfoVo;
     }
 
 

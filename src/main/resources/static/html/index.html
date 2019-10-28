@@ -35,8 +35,11 @@
         </div>
     </div>
     <div id="btns">
-        <button type="button" class="textbox" onclick="insert('###')">插入###</button>
+        <button type="button" class="textbox" onclick="insert('###，')">插入###，</button>
+        <button type="button" class="textbox" onclick="insert('###。')">插入###。</button>
         <button type="button" class="textbox" onclick="insert('，')">插入，</button>
+        <button type="button" class="textbox" onclick="insert('。')">插入。</button>
+        <button type="button" class="textbox" onclick="mergePre()">合并至上一行</button>
         <button type="button" class="textbox" onclick="finish()" style="margin-top: 100px">完成</button>
     </div>
 </div>
@@ -46,24 +49,22 @@
 <script type="text/javascript">
     var focusId = "";
     var answer = "";
-    var imageId = 76;
+    var imageId = 1;
+    var titleLines = 1;
+    var answerIdx = 1;
 
     // 光标处插入文本
     function insert(str){
         $("#" + focusId).insertAtCaret(str);
     }
-    
-    function doSearch(value) {
-        // 向服务器发送请求
-        $.ajax({
-            url:"/question/parse",
-            method:"POST",
-            data:"dirPath=" +value,
-            success: function(result) {
-                alert(result);
-            }
-        })
 
+    function mergePre(){
+        var title = $("#" + focusId).val();
+        var prevId = focusId -1;
+        var preTitle = $("#" + prevId).val();
+        $("#" + prevId).val(preTitle);
+        $("#" + focusId).remove();
+        titleLines = titleLines -1;
     }
 
     // 完成选择
@@ -80,7 +81,8 @@
             return;
         }
 
-        var params = "&title=" + title + "&answer=" + answer + "&imageId=" + imageId;
+        var params = "&title=" + title + "&answer=" + answer + "&imageId=" + imageId
+                + "&titleLines=" + titleLines + "&answerIdx=" + answerIdx;
 
         $.ajax({
             url:"/question",
@@ -93,25 +95,27 @@
         })
     }
 
-    function loadImage(id){
+    function loadImage(){
         $.ajax({
-            url:"/image/info/" + id,
+            url:"/image/info",
             method:"GET",
             success: function(result) {
-                // 保存id
+                // 保存id, 行数
                 imageId = result.id;
+                titleLines = result.titleList.length;
+
                 // 替换图片
                 $('#previewImg').attr('src', "/image/" + result.id);
 
                 // 初始化标题
                 $('#title').empty();
                 result.titleList.forEach(function (val, idx) {
-                    $('#title').append("<li><input id='" + result.id + "-" + idx +"' type='text' value='" + val + "' onfocus='fc(this)'></li>")
+                    $('#title').append("<li><input id='" + idx +"' type='text' value='" + val + "' onfocus='fc(this)' ></li>")
                 });
                 // 初始化答案
                 $('#answer').empty();
                 result.answerList.forEach(function (val, idx) {
-                    $('#answer').append("<li onclick='selectAnswer(this)'><label>" + val + "</label></li>")
+                    $('#answer').append("<li onclick='selectAnswer(this)' idx='" + idx + "'><label>" + val + "</label></li>")
                 });
             }
         })
@@ -136,6 +140,7 @@
     $(function () {
         $("input").focus(function () {
             focusId = $(this).attr("id");
+            answerIdx = $(this).attr("idx");
         });
 
         loadImage(imageId);

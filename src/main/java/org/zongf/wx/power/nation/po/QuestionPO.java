@@ -24,21 +24,18 @@ public class QuestionPO implements Serializable {
     // 答案
     private String answer;
 
+    // 题目行数
+    private int titleLines;
+
+    // 答案索引号
+    private int answerIdx;
+
     // 新增时间
     @JSONField(format="yyyy.MM.dd")
     private Date createTime;
 
 	public QuestionPO() {
         super();
-    }
-
-	public QuestionPO(Long id, Long imageId, String title, String answer, Date createTime) {
-        super();
-		this.id = id;
-		this.imageId = imageId;
-		this.title = title;
-		this.answer = answer;
-		this.createTime = createTime;
     }
 
     public void setId(Long id){
@@ -81,8 +78,32 @@ public class QuestionPO implements Serializable {
 		return this.createTime;
 	}
 
-    public String toString() {
-		return getClass().getSimpleName() + "@" + hashCode() + ": {id:" + id + ", imageId:" + imageId + ", title:" + title + ", answer:" + answer + ", createTime:" + createTime  + "}";
+	public int getTitleLines() {
+		return titleLines;
 	}
 
+	public void setTitleLines(int titleLines) {
+		this.titleLines = titleLines;
+	}
+
+	public int getAnswerIdx() {
+		return answerIdx;
+	}
+
+	public void setAnswerIdx(int answerIdx) {
+		this.answerIdx = answerIdx;
+	}
+
+	@Override
+	public String toString() {
+		return "QuestionPO{" +
+				"id=" + id +
+				", imageId=" + imageId +
+				", title='" + title + '\'' +
+				", answer='" + answer + '\'' +
+				", titleLines=" + titleLines +
+				", answerIdx=" + answerIdx +
+				", createTime=" + createTime +
+				'}';
+	}
 }

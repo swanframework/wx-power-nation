@@ -22,6 +22,8 @@ public class QuestionInfoVo {
     // 图片答案选项
     private List<String> answerList = new ArrayList<>();
 
+    private int left;
+
 	public QuestionInfoVo() {
         super();
     }
@@ -66,7 +68,15 @@ public class QuestionInfoVo {
 		return this.answerList;
 	}
 
-    public String toString() {
+	public int getLeft() {
+		return left;
+	}
+
+	public void setLeft(int left) {
+		this.left = left;
+	}
+
+	public String toString() {
 		return getClass().getSimpleName() + "@" + hashCode() + ": {id:" + id + ", imageName:" + imageName + ", titleList:" + titleList + ", answerList:" + answerList  + "}";
 	}
 
