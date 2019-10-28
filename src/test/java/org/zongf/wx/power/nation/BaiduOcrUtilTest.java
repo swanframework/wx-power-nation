@@ -17,7 +17,7 @@ public class BaiduOcrUtilTest {
     @Test
     public void basicOcr() throws Exception{
 
-        String imgPath = "/media/zongf/document/xxqg-imags/Screenshot_2019-10-26-21-17-29.png";
+        String imgPath = "/workspace/zongf/wx-power-nation/src/main/resources/images/0.png";
 
         OcrResponse basicOcrResponse = BaiduOcrUtil.doBasicOcr(BaiduConstant.AK, BaiduConstant.SK, FileUtils.getFileBytes(imgPath));
 

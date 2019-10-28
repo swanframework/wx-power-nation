@@ -48,7 +48,7 @@ public class ImageMapperTest {
 
     @Test
     public void batchSave() {
-        String imagePath = "/media/zongf/document/xxqg-imags/20191027/";
+        String imagePath = "/workspace/zongf/wx-power-nation/src/main/resources/images";
         this.imageService.batchSave(BaiduConstant.AK, BaiduConstant.SK, imagePath,"1");
 
         try {
