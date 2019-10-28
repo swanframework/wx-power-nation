@@ -12,7 +12,10 @@
     <script type="text/javascript" src="../custom/js/insertAtCaret.js"></script>
 </head>
 <body class="easyui-layout" style="width: 100%">
-
+<!-- 头部区域 -->
+<div data-options="region:'north',border:false" style="height:60px;line-height:60px; background:#B3DFDA;text-align: center">
+        <h1>剩余:<em id="leftNum"></em></h1>
+</div>
 <!-- 左侧: 图片预览区 -->
 <div id="left" data-options="region:'west',collapsible:false, title:'图片预览'">
     <!-- 900x1600  -->
@@ -117,6 +120,9 @@
                 result.answerList.forEach(function (val, idx) {
                     $('#answer').append("<li onclick='selectAnswer(this)' idx='" + idx + "'><label>" + val + "</label></li>")
                 });
+
+                // 剩余张数
+                $("#leftNum").html(result.left + ", 图片id:" + result.id);
             }
         })
     }
