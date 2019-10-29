@@ -1,12 +1,7 @@
 package org.zongf.wx.power.nation.service.api;
 
-import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
-import com.github.miemiedev.mybatis.paginator.domain.PageList;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.StringType;
-import org.apache.ibatis.annotations.Param;
-import org.zongf.wx.power.nation.mapper.ImageMapper;
 import org.zongf.wx.power.nation.po.ImagePO;
-import org.zongf.wx.power.nation.vo.LatestImageInfo;
+import org.zongf.wx.power.nation.vo.TodoImageInfoVO;
 
 /**
  * @author: zongf
@@ -28,7 +23,7 @@ public interface IImageService {
     byte[] queryContent(Long id);
 
     // 查询待处理的图片
-    LatestImageInfo queryToDoImage(String type);
+    TodoImageInfoVO queryToDoImage(String type);
 
     // 更新状态
     boolean handleImage(Long id);

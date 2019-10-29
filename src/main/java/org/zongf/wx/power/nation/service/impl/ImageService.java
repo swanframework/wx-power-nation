@@ -2,21 +2,16 @@ package org.zongf.wx.power.nation.service.impl;
 
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zongf.wx.power.nation.constant.ImageConstant;
+import org.zongf.wx.power.nation.factory.TodoImageFactory;
 import org.zongf.wx.power.nation.mapper.ImageMapper;
 import org.zongf.wx.power.nation.po.ImagePO;
 import org.zongf.wx.power.nation.service.api.IImageService;
-import org.zongf.wx.power.nation.thread.OcrTask;
-import org.zongf.wx.power.nation.util.FileUtils;
-import org.zongf.wx.power.nation.vo.LatestImageInfo;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.zongf.wx.power.nation.vo.TodoImageInfoVO;
 
 /**
  * @author: zongf
@@ -57,10 +52,14 @@ public class ImageService implements IImageService {
     }
 
     @Override
-    public LatestImageInfo queryToDoImage(String type) {
-        PageList<ImagePO> imagePOS = this.imageMapper.queryByPager(new PageBounds(1, 1), type, ImageConstant.STATUS_TODO);
-        if(imagePOS.isEmpty()) return null;
-        return new LatestImageInfo(imagePOS.get(0),imagePOS.getPaginator().getTotalCount());
+    public TodoImageInfoVO queryToDoImage(String type) {
+        // 使用分页查询, 查询1页信息
+        PageList<ImagePO> pager = this.imageMapper.queryByPager(new PageBounds(1, 1), type, ImageConstant.STATUS_TODO);
+
+        // 如果为空, 则返回null
+        if(pager.isEmpty()) return null;
+
+        return TodoImageFactory.create(pager.get(0), pager.getPaginator().getTotalCount());
     }
 
     @Override

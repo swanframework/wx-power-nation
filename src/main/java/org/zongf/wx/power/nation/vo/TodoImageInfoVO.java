@@ -8,7 +8,7 @@ import java.util.List;
  * @created: 2019-10-27
  * @since 1.0
  */
-public class QuestionInfoVo {
+public class TodoImageInfoVO {
 
     // 图片id
     private Long id;
@@ -22,13 +22,13 @@ public class QuestionInfoVo {
     // 图片答案选项
     private List<String> answerList = new ArrayList<>();
 
-    private int left;
+    private int todoNum;
 
-	public QuestionInfoVo() {
+	public TodoImageInfoVO() {
         super();
     }
 
-	public QuestionInfoVo(Long id, String imageName, List<String> titleList, List<String> answerList) {
+	public TodoImageInfoVO(Long id, String imageName, List<String> titleList, List<String> answerList) {
         super();
 		this.id = id;
 		this.imageName = imageName;
@@ -68,12 +68,12 @@ public class QuestionInfoVo {
 		return this.answerList;
 	}
 
-	public int getLeft() {
-		return left;
+	public int getTodoNum() {
+		return todoNum;
 	}
 
-	public void setLeft(int left) {
-		this.left = left;
+	public void setTodoNum(int todoNum) {
+		this.todoNum = todoNum;
 	}
 
 	public String toString() {

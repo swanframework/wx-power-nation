@@ -3,7 +3,7 @@ package org.zongf.wx.power.nation.factory;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.zongf.wx.power.nation.po.ImagePO;
-import org.zongf.wx.power.nation.vo.QuestionInfoVo;
+import org.zongf.wx.power.nation.vo.TodoImageInfoVO;
 import org.zongf.wx.power.nation.vo.ocr.OcrResponse;
 
 import java.util.ArrayList;
@@ -16,9 +16,9 @@ import java.util.Stack;
  * @created: 2019-10-27
  * @since 1.0
  */
-public class QuestionInfoFactory {
+public class TodoImageFactory {
 
-    public static QuestionInfoVo create(ImagePO imagePO) {
+    public static TodoImageInfoVO create(ImagePO imagePO, int todoNum) {
 
         if(imagePO == null) return null;
 
@@ -71,10 +71,11 @@ public class QuestionInfoFactory {
         Collections.reverse(answerList);
 
         // 转换对象
-        QuestionInfoVo questionInfoVo = new QuestionInfoVo();
-        questionInfoVo.setId(imagePO.getId());
-        questionInfoVo.setTitleList(titleList);
-        questionInfoVo.setAnswerList(answerList);
-        return questionInfoVo;
+        TodoImageInfoVO todoImageInfoVO = new TodoImageInfoVO();
+        todoImageInfoVO.setId(imagePO.getId());
+        todoImageInfoVO.setTitleList(titleList);
+        todoImageInfoVO.setAnswerList(answerList);
+        todoImageInfoVO.setTodoNum(todoNum);
+        return todoImageInfoVO;
     }
 }

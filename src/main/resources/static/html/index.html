@@ -13,37 +13,35 @@
 </head>
 <body class="easyui-layout" style="width: 100%">
 
-<!-- 左侧: 图片预览区 -->
-<div id="left" data-options="region:'west',collapsible:false, title:'图片预览'">
-    <!-- 900x1600  -->
-    <img id="previewImg"><br/>
-</div>
+    <!-- 左侧: 图片预览区 -->
+    <div id="left" data-options="region:'west',collapsible:false, title:'图片预览'">
+        <!-- 900x1600  -->
+        <img id="previewImg"><br/>
+    </div>
 
-<!-- 右侧: 图片解析区 -->
-<div id="cnt" data-options="region:'center',title:'解析结果'">
-    <div style="float: left">
-        <!-- 截屏边框 -->
-        <div id="border">
-            <div id="signle"></div> <!-- 头部信号区域 -->
+    <!-- 右侧: 图片解析区 -->
+    <div id="cnt" data-options="region:'center',title:'解析结果'">
+        <div style="float: left">
+            <!-- 截屏边框 -->
+            <div id="border">
+                <div id="signle"></div> <!-- 头部信号区域 -->
 
-            <div id="question"> <!-- 题目背景 -->
-                <ul id="title">
-                </ul>
-                <ul id="answer">
-                </ul>
+                <div id="question"> <!-- 题目背景 -->
+                    <ul id="title"></ul>
+                    <ul id="answer"></ul>
+                </div>
             </div>
         </div>
+        <!-- 按钮区 -->
+        <div id="btns">
+            <button type="button" class="textbox" onclick="insert('###，')">插入###，</button>
+            <button type="button" class="textbox" onclick="insert('###。')">插入###。</button>
+            <button type="button" class="textbox" onclick="insert('，')">插入，</button>
+            <button type="button" class="textbox" onclick="insert('。')">插入。</button>
+            <button type="button" class="textbox" onclick="mergePre()">合并至上一行</button>
+            <button type="button" class="textbox" onclick="finish()" style="margin-top: 100px">完成</button>
+        </div>
     </div>
-    <div id="btns">
-        <button type="button" class="textbox" onclick="insert('###，')">插入###，</button>
-        <button type="button" class="textbox" onclick="insert('###。')">插入###。</button>
-        <button type="button" class="textbox" onclick="insert('，')">插入，</button>
-        <button type="button" class="textbox" onclick="insert('。')">插入。</button>
-        <button type="button" class="textbox" onclick="mergePre()">合并至上一行</button>
-        <button type="button" class="textbox" onclick="finish()" style="margin-top: 100px">完成</button>
-    </div>
-</div>
-
 
 </body>
 <script type="text/javascript">
@@ -97,21 +95,21 @@
 
     function loadImage(){
         $.ajax({
-            url:"/image/info",
+            url:"/image/todo?type=1",
             method:"GET",
             success: function(result) {
-                // 保存id, 行数
+                // 保存id
                 imageId = result.id;
-                titleLines = result.titleList.length;
 
                 // 替换图片
-                $('#previewImg').attr('src', "/image/" + result.id);
+                $('#previewImg').attr('src', "/image/content/" + imageId);
 
                 // 初始化标题
                 $('#title').empty();
                 result.titleList.forEach(function (val, idx) {
                     $('#title').append("<li><input id='" + idx +"' type='text' value='" + val + "' onfocus='fc(this)' ></li>")
                 });
+
                 // 初始化答案
                 $('#answer').empty();
                 result.answerList.forEach(function (val, idx) {
