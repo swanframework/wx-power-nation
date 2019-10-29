@@ -24,11 +24,10 @@ public class QuestionPO implements Serializable {
     // 答案
     private String answer;
 
-    // 题目行数
-    private int titleLines;
-
     // 答案索引号
     private int answerIdx;
+
+	private String answerLoc;
 
     // 新增时间
     @JSONField(format="yyyy.MM.dd")
@@ -38,52 +37,36 @@ public class QuestionPO implements Serializable {
         super();
     }
 
-    public void setId(Long id){
-		this.id=id;
+	public Long getId() {
+		return id;
 	}
 
-	public Long getId(){
-		return this.id;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-    public void setImageId(Long imageId){
-		this.imageId=imageId;
+	public Long getImageId() {
+		return imageId;
 	}
 
-	public Long getImageId(){
-		return this.imageId;
+	public void setImageId(Long imageId) {
+		this.imageId = imageId;
 	}
 
-    public void setTitle(String title){
-		this.title=title;
+	public String getTitle() {
+		return title;
 	}
 
-	public String getTitle(){
-		return this.title;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
-    public void setAnswer(String answer){
-		this.answer=answer;
+	public String getAnswer() {
+		return answer;
 	}
 
-	public String getAnswer(){
-		return this.answer;
-	}
-
-    public void setCreateTime(Date createTime){
-		this.createTime=createTime;
-	}
-
-	public Date getCreateTime(){
-		return this.createTime;
-	}
-
-	public int getTitleLines() {
-		return titleLines;
-	}
-
-	public void setTitleLines(int titleLines) {
-		this.titleLines = titleLines;
+	public void setAnswer(String answer) {
+		this.answer = answer;
 	}
 
 	public int getAnswerIdx() {
@@ -94,6 +77,22 @@ public class QuestionPO implements Serializable {
 		this.answerIdx = answerIdx;
 	}
 
+	public String getAnswerLoc() {
+		return answerLoc;
+	}
+
+	public void setAnswerLoc(String answerLoc) {
+		this.answerLoc = answerLoc;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
 	@Override
 	public String toString() {
 		return "QuestionPO{" +
@@ -101,8 +100,8 @@ public class QuestionPO implements Serializable {
 				", imageId=" + imageId +
 				", title='" + title + '\'' +
 				", answer='" + answer + '\'' +
-				", titleLines=" + titleLines +
 				", answerIdx=" + answerIdx +
+				", answerLoc='" + answerLoc + '\'' +
 				", createTime=" + createTime +
 				'}';
 	}

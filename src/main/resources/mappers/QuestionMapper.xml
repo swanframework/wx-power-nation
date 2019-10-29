@@ -6,13 +6,13 @@
 
     <!-- 定义所有字段 -->
     <sql id="columns_all">
-        id, title, answer, titleLines, answerIdx, imageId, createTime
+        id, imageId, title, answer, answerIdx, answerLoc, createTime
     </sql>
 
     <!-- 新增 -->
     <insert id="save" useGeneratedKeys="true" keyProperty="id">
         insert into s_question(<include refid="columns_all" />)
-        values (null, #{title}, #{answer}, #{titleLines}, #{answerIdx}, #{imageId}, #{createTime})
+        values (null, #{imageId}, #{title}, #{answer}, #{answerIdx}, #{answerLoc}, #{createTime})
     </insert>
 
     <!-- 删除 -->
@@ -20,9 +20,8 @@
         delete from s_question where id = #{id}
     </delete>
 
-
     <!-- 通过id 查询实体  -->
-    <select id="findById" resultType="org.zongf.wx.power.nation.po.QuestionPO"  >
+    <select id="queryById" resultType="org.zongf.wx.power.nation.po.QuestionPO"  >
         select <include refid="columns_all" />
         from s_question
         where id = #{id}
@@ -31,11 +30,13 @@
     <!-- 分页查询 -->
     <select id="queryByPager" resultType="org.zongf.wx.power.nation.po.QuestionPO">
         select <include refid="columns_all" />
-        from s_question emp
+        from s_question
     </select>
 
-    <!-- 清空表中数据, 同时重置自增序列从0开始 -->
-    <delete id="clear">
-        truncate table s_question
-    </delete>
+    <!-- 分页查询 -->
+    <select id="queryAll" resultType="org.zongf.wx.power.nation.po.QuestionPO">
+        select <include refid="columns_all" />
+        from s_question
+    </select>
+
 </mapper>
