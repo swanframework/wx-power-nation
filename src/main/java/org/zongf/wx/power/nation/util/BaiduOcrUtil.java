@@ -185,8 +185,10 @@ public class BaiduOcrUtil {
     private static void handleFirstLine(OcrResponse ocrResponse) {
         if (ocrResponse != null && ocrResponse.getWords_result() != null && ocrResponse.getWords_result().size() > 0) {
             String firstLine = ocrResponse.getWords_result().get(0).getWords();
-            if(firstLine.length() <10 &&(firstLine.startsWith("N") || firstLine.startsWith("NB"))){
+            if(firstLine.length() <10 &&
+                    (firstLine.startsWith("N") || firstLine.startsWith("B") || firstLine.startsWith("NB"))){
                 ocrResponse.getWords_result().remove(0);
+                ocrResponse.setWords_result_num(ocrResponse.getWords_result_num() -1);
             }
         }
     }
