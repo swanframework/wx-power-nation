@@ -34,6 +34,7 @@ public class ImageImportTest {
     // 批量导入，并做基础的ocr
     @Test
     public void batchImportImages() throws Exception{
+        long start = System.currentTimeMillis();
 
         // 图片目录
         String imageDir = "F:\\study-app\\xxqg-imags";
@@ -42,6 +43,9 @@ public class ImageImportTest {
         BasicOcrTask.doOcrTask(imageDir, ImageConstant.CATEGORY_QUESTION);
 
         Thread.sleep(Integer.MAX_VALUE);
+
+        long end = System.currentTimeMillis();
+        System.out.println("解析完成, 耗时:" + (end -start) + " ms");
     }
 
     // 精确ocr
