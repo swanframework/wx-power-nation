@@ -22,7 +22,7 @@ public interface ImageMapper {
     ImagePO queryInfo(Long id);
 
     // 查询图片内容
-    byte[] queryContent(Long id);
+    ImagePO queryContent(Long id);
 
     // 更新状态
     boolean updateStatus(Long id, String status);
@@ -32,7 +32,7 @@ public interface ImageMapper {
 
     // 分页查询
     PageList<ImagePO> queryByPager(PageBounds pageBounds,
-           @Param("type") String type, @Param("status") String status);
+           @Param("category") String category, @Param("status") String status);
 
     // 清空表
     void clear();

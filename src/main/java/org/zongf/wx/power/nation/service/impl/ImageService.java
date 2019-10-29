@@ -52,7 +52,8 @@ public class ImageService implements IImageService {
 
     @Override
     public byte[] queryContent(Long id) {
-        return this.imageMapper.queryContent(id);
+        ImagePO imagePO = this.imageMapper.queryContent(id);
+        return imagePO == null ? null : imagePO.getContent();
     }
 
     @Override

@@ -21,7 +21,7 @@
     </select>
 
     <!-- 查询图片信息, 只包含图片内容-->
-    <select id="queryContent">
+    <select id="queryContent" resultType="org.zongf.wx.power.nation.po.ImagePO">
         select content
         from s_image
         where id = #{id}
