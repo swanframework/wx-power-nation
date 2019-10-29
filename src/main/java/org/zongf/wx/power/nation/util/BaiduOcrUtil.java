@@ -1,6 +1,7 @@
 package org.zongf.wx.power.nation.util;
 
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -9,14 +10,15 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zongf.wx.power.nation.config.BaiduAccoutConfig;
 import org.zongf.wx.power.nation.exception.OcrException;
 import org.zongf.wx.power.nation.vo.ocr.AccessTokenResponse;
 import org.zongf.wx.power.nation.vo.ocr.OcrResponse;
+import org.zongf.wx.power.nation.vo.ocr.TextArea;
 
 import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Base64;
+import java.util.Iterator;
 
 /**
  * @author: zongf
@@ -75,8 +77,20 @@ public class BaiduOcrUtil {
      * @author zongf
      * @created 2019-10-25
      */
-    public static OcrResponse doBasicOcr(String ak, String sk, byte[] bytes){
-        return doOcr(ak, sk, bytes, URL_BASIC_OCR);
+    public static OcrResponse doBasicOcr(byte[] bytes){
+        OcrResponse ocrResponse = doOcr(BaiduAccoutConfig.AK, BaiduAccoutConfig.SK, bytes, URL_BASIC_OCR);
+
+        // 如果请求不为空, 则处理请求头
+        if (ocrResponse != null) {
+            String firstLine = ocrResponse.getWords_result().get(0).getWords();
+            if(firstLine.length() <10 &&
+                    (firstLine.startsWith("N") || firstLine.startsWith("B") || firstLine.startsWith("NB"))){
+                ocrResponse.getWords_result().remove(0);
+                ocrResponse.setWords_result_num(ocrResponse.getWords_result_num() -1);
+            }
+        }
+
+        return ocrResponse;
     }
 
     /** 提取图片中的文字, 包含文字位置信息
@@ -86,8 +100,20 @@ public class BaiduOcrUtil {
      * @author zongf
      * @created 2019-10-25
      */
-    public static OcrResponse doLocationOcr(String ak, String sk, byte[] bytes) {
-        return doOcr(ak, sk, bytes, URL_LOCATION_OCR);
+    public static OcrResponse doLocationOcr(byte[] bytes) {
+        OcrResponse ocrResponse = doOcr(BaiduAccoutConfig.AK, BaiduAccoutConfig.SK, bytes, URL_LOCATION_OCR);
+
+        if (ocrResponse != null) {
+            Iterator<TextArea> iterator = ocrResponse.getWords_result().iterator();
+            while (iterator.hasNext()) {
+                TextArea textArea = iterator.next();
+                if (textArea.getLocation().getHeight() < 50) {
+                    iterator.remove();
+                }
+            }
+        }
+
+        return ocrResponse;
     }
 
 
@@ -121,7 +147,16 @@ public class BaiduOcrUtil {
 
             log.info("图片orc解析完成, 结果:{}", result);
 
-            return JSONObject.parseObject(result, OcrResponse.class);
+            OcrResponse ocrResponse = JSONObject.parseObject(result, OcrResponse.class);
+
+            // 判断
+            if (StringUtils.isNotEmpty(ocrResponse.getError_code()) || ocrResponse.getWords_result_num() == 0
+                    || ocrResponse.getWords_result() == null || ocrResponse.getWords_result().size() == 0) {
+                return null;
+            }else {
+                return ocrResponse;
+            }
+
         } catch (Exception e) {
             throw new OcrException("调用ocr 服务异常", e);
         }
@@ -168,4 +203,22 @@ public class BaiduOcrUtil {
         byte[] base64 = Base64.getEncoder().encode(bytes);
         return new String(base64);
     }
+
+    /** 处理首行字符, 首行可能为时间行
+     * @param ocrResponse
+     * @since 1.0
+     * @author zongf
+     * @created 2019-10-29
+     */
+    private static void handleFirstLine(OcrResponse ocrResponse) {
+        if (ocrResponse != null && ocrResponse.getWords_result() != null && ocrResponse.getWords_result().size() > 0) {
+            String firstLine = ocrResponse.getWords_result().get(0).getWords();
+            if(firstLine.length() <10 &&
+                    (firstLine.startsWith("N") || firstLine.startsWith("B") || firstLine.startsWith("NB"))){
+                ocrResponse.getWords_result().remove(0);
+                ocrResponse.setWords_result_num(ocrResponse.getWords_result_num() -1);
+            }
+        }
+    }
+
 }

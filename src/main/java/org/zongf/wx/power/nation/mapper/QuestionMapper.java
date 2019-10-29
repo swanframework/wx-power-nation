@@ -5,6 +5,8 @@ import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import org.apache.ibatis.annotations.Mapper;
 import org.zongf.wx.power.nation.po.QuestionPO;
 
+import java.util.List;
+
 /**
  * @author: zongf
  * @created: 2019-10-27
@@ -20,12 +22,11 @@ public interface QuestionMapper {
     boolean delete(Long id);
 
     // 通过id查询
-    QuestionPO findById(Long id);
+    QuestionPO queryById(Long id);
 
     // 分页查询
     PageList<QuestionPO> queryByPager(PageBounds pageBounds);
 
-    // 清空表
-    void clear();
+    List<QuestionPO> queryAll();
 
 }

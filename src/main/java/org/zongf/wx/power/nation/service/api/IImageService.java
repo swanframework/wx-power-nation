@@ -2,9 +2,9 @@ package org.zongf.wx.power.nation.service.api;
 
 import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.StringType;
-import org.zongf.wx.power.nation.mapper.ImageMapper;
+import org.apache.ibatis.annotations.Param;
 import org.zongf.wx.power.nation.po.ImagePO;
+import org.zongf.wx.power.nation.vo.TodoImageInfoVO;
 
 /**
  * @author: zongf
@@ -13,18 +13,28 @@ import org.zongf.wx.power.nation.po.ImagePO;
  */
 public interface IImageService {
 
+    // 保存
+    boolean save(ImagePO imagePO);
 
-    // 通过id 查询
-    ImagePO queryById(Long id);
-
-    // 通过图片状态和类型查询
-    PageList<ImagePO> queryPager(PageBounds pageBounds, String type, String status);
-
-    // 删除图片
+    // 删除
     boolean delete(Long id);
 
-    // 批量保存图片
-    boolean batchSave(String ak, String sk, String path, String type);
+    // 查询图片信息
+    ImagePO queryInfo(Long id);
 
+    // 查询图片内容
+    byte[] queryContent(Long id);
+
+    // 查询待处理的图片
+    TodoImageInfoVO queryToDoImage(String type);
+
+    // 更新状态
+    boolean handleImage(Long id);
+
+    // 分页查询
+    PageList<ImagePO> queryByPager(PageBounds pageBounds, String category, String status);
+
+    // 更新locOcr
+    boolean updateLocOcr(Long id, String locOcr);
 
 }

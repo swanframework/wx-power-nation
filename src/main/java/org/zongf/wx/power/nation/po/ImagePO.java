@@ -1,5 +1,6 @@
 package org.zongf.wx.power.nation.po;
 
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -12,97 +13,90 @@ public class ImagePO {
     // 图片id
     private Long id;
 
-    // 图片名称
-    private String name;
-
     // 图片内容, 字节码
     private byte[] content;
 
     // 图片类型: 1 挑战答题  2 每周答题  3 专项答题
-    private String type;
+    private String category;
 
-    // 图片ocr 结果
-    private String ocr;
+    // 低精度ocr
+    private String basicOcr;
+
+    // 高精度ocr, 包含位置
+    private String locOcr;
 
     // 图片状态: 0 待处理 1 已经处理
-    private String status = "0";
+    private String status;
 
     // 创建时间
     private Date createTime;
 
-	public ImagePO() {
-        super();
-    }
+	public Long getId() {
+		return id;
+	}
 
-	public ImagePO(Long id, String name, byte[] content, String type, String ocr, String status, Date createTime) {
-        super();
+	public void setId(Long id) {
 		this.id = id;
-		this.name = name;
+	}
+
+	public byte[] getContent() {
+		return content;
+	}
+
+	public void setContent(byte[] content) {
 		this.content = content;
-		this.type = type;
-		this.ocr = ocr;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getBasicOcr() {
+		return basicOcr;
+	}
+
+	public void setBasicOcr(String basicOcr) {
+		this.basicOcr = basicOcr;
+	}
+
+	public String getLocOcr() {
+		return locOcr;
+	}
+
+	public void setLocOcr(String locOcr) {
+		this.locOcr = locOcr;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
-    }
-
-    public void setId(Long id){
-		this.id=id;
 	}
 
-	public Long getId(){
-		return this.id;
+	@Override
+	public String toString() {
+		return "ImagePO{" +
+				"id=" + id +
+				", content=" + Arrays.toString(content) +
+				", type='" + category + '\'' +
+				", basicOcr='" + basicOcr + '\'' +
+				", locOrc='" + locOcr + '\'' +
+				", status='" + status + '\'' +
+				", createTime=" + createTime +
+				'}';
 	}
-
-    public void setName(String name){
-		this.name=name;
-	}
-
-	public String getName(){
-		return this.name;
-	}
-
-    public void setContent(byte[] content){
-		this.content=content;
-	}
-
-	public byte[] getContent(){
-		return this.content;
-	}
-
-    public void setType(String type){
-		this.type=type;
-	}
-
-	public String getType(){
-		return this.type;
-	}
-
-    public void setOcr(String ocr){
-		this.ocr=ocr;
-	}
-
-	public String getOcr(){
-		return this.ocr;
-	}
-
-    public void setStatus(String status){
-		this.status=status;
-	}
-
-	public String getStatus(){
-		return this.status;
-	}
-
-    public void setCreateTime(Date createTime){
-		this.createTime=createTime;
-	}
-
-	public Date getCreateTime(){
-		return this.createTime;
-	}
-
-    public String toString() {
-		return getClass().getSimpleName() + "@" + hashCode() + ": {id:" + id + ", name:" + name + ", content:" + content + ", type:" + type + ", ocr:" + ocr + ", status:" + status + ", createTime:" + createTime  + "}";
-	}
-
 }

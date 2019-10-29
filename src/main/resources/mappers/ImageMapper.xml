@@ -4,22 +4,47 @@
 <!-- 命名空间使用对应的Mapper类全限定名称 -->
 <mapper namespace="org.zongf.wx.power.nation.mapper.ImageMapper">
 
+    <sql id="columns_basic">
+        id, category, status, basicOcr, locOcr, createTime
+    </sql>
+
     <!-- 定义所有字段 -->
     <sql id="columns_all">
-        id, name, content, type, status, ocr, createTime
+        <include refid="columns_basic" />, content
     </sql>
+
+    <!-- 查询图片信息, 不包含图片内容-->
+    <select id="queryInfo" resultType="org.zongf.wx.power.nation.po.ImagePO">
+        select <include refid="columns_basic" />
+        from s_image
+        where id = #{id}
+    </select>
+
+    <!-- 查询图片信息, 只包含图片内容-->
+    <select id="queryContent" resultType="org.zongf.wx.power.nation.po.ImagePO">
+        select content
+        from s_image
+        where id = #{id}
+    </select>
+
+    <!-- 更新状态 -->
+    <update id="updateStatus">
+        update s_image
+        set status=#{status}
+        where id = #{id}
+    </update>
+
+    <!-- 更新locOcr 字段 -->
+    <update id="updateLocOcr">
+        update s_image
+        set locOcr=#{locOcr}, status='1'
+        where id = #{id}
+    </update>
 
     <!-- 新增 -->
     <insert id="save" useGeneratedKeys="true" keyProperty="id">
         insert into s_image(<include refid="columns_all" />)
-        values (null, #{name}, #{content}, #{type}, #{status}, #{ocr}, #{createTime})
-    </insert>
-
-    <!-- 更新 -->
-    <insert id="update" useGeneratedKeys="true" keyProperty="id">
-        update s_image
-        set name = #{name}, content = #{content}, type = #{type}, status=#{status}, ocr=#{ocr}, createTime=#{createTime}
-        where id = #{id}
+        values (null, #{category}, #{status}, #{basicOcr}, #{locOcr}, #{createTime}, #{content})
     </insert>
 
     <!-- 删除 -->
@@ -27,30 +52,17 @@
         delete from s_image where id = #{id}
     </delete>
 
-    <!-- 通过id 查询实体  -->
-    <select id="findById" resultType="org.zongf.wx.power.nation.po.ImagePO"  >
-        select <include refid="columns_all" />
-        from s_image
-        where id = #{id}
-    </select>
-
     <!-- 分页查询 -->
     <select id="queryByPager" resultType="org.zongf.wx.power.nation.po.ImagePO">
-        select <include refid="columns_all" />
+        select <include refid="columns_basic" />
         from s_image
-        where type = #{type} and status = #{status}
-    </select>
-
-    <select id="hasSameName" resultType="java.lang.Boolean">
-        select count(id)
-        from s_image
-        where name = #{name}
+        where category = #{category} and status = #{status}
     </select>
 
     <select id="hasSameOcr" resultType="java.lang.Boolean">
         select count(id)
         from s_image
-        where type = #{type} and ocr = #{ocr}
+        where category = #{category} and basicOcr = #{basicOcr}
     </select>
 
     <!-- 清空表中数据, 同时重置自增序列从0开始 -->
