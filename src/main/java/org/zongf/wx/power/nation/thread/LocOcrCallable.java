@@ -78,7 +78,7 @@ public class LocOcrCallable implements Callable<ImgLocOcrResult> {
             OcrResponse ocrResponse = BaiduOcrUtil.doLocationOcr(content);
 
             // 更新数据库
-            if (ocrResponse != null && StringUtils.isNotEmpty(ocrResponse.getError_code())) {
+            if (ocrResponse != null) {
                 success = this.imageService.updateLocOcr(imagePO.getId(), JSONObject.toJSONString(ocrResponse));
             }
         } catch (Exception ex) {

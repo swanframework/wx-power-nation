@@ -55,7 +55,7 @@ public class ImageService implements IImageService {
     @Override
     public TodoImageInfoVO queryToDoImage(String type) {
         // 使用分页查询, 查询1页信息
-        PageList<ImagePO> pager = this.imageMapper.queryByPager(new PageBounds(page++, 1), type, ImageConstant.STATUS_DONE_LOC_OCR);
+        PageList<ImagePO> pager = this.imageMapper.queryByPager(new PageBounds(page++, 1), type, ImageConstant.STATUS_DONE_BASIC_OCR);
 
         // 如果为空, 则返回null
         if(pager.isEmpty()) return null;

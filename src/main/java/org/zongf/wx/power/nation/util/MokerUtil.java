@@ -33,4 +33,13 @@ public class MokerUtil {
     public static void clickCapture() {
         RobotUtil.mouseLeftClick(570, 240);
     }
+
+    /** 获取屏幕内容
+     * @since 1.0
+     * @author zongf
+     * @created 2019-10-28
+     */
+    public static byte[] getScreenContent() {
+        return RobotUtil.screenCapture(0, 68, 554, 950);
+    }
 }

@@ -107,7 +107,7 @@ public class BaiduOcrUtil {
             Iterator<TextArea> iterator = ocrResponse.getWords_result().iterator();
             while (iterator.hasNext()) {
                 TextArea textArea = iterator.next();
-                if (textArea.getLocation().getHeight() < 50) {
+                if (textArea.getLocation().getTop() < 50) {
                     iterator.remove();
                 }
             }
@@ -158,6 +158,7 @@ public class BaiduOcrUtil {
             }
 
         } catch (Exception e) {
+            log.error("调用ocr服务异常", e);
             throw new OcrException("调用ocr 服务异常", e);
         }
     }

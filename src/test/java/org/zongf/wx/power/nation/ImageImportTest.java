@@ -37,12 +37,13 @@ public class ImageImportTest {
         long start = System.currentTimeMillis();
 
         // 图片目录
-        String imageDir = "F:\\study-app\\xxqg-imags";
+        String imageDir = "G:\\study-app\\20191027";
+
+        // 全部图片
+//        imageDir = "G:\\study-app\\xxqg-imags";
 
         // 开始批量导入
         BasicOcrTask.doOcrTask(imageDir, ImageConstant.CATEGORY_QUESTION);
-
-        Thread.sleep(Integer.MAX_VALUE);
 
         long end = System.currentTimeMillis();
         System.out.println("解析完成, 耗时:" + (end -start) + " ms");

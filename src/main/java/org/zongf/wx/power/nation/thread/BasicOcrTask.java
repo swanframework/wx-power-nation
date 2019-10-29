@@ -54,7 +54,7 @@ public class BasicOcrTask {
             }
         }
 
-        log.info("图片导入结束: 总数量:{}, 成功数量:{}, 重复数量:{}, 失败数量:{}",
+        log.info("图片导入结束: 总数量:{}, 成功数量:{}, 重复数量:{}, 非法图片数量:{}, 失败数量:{}",
                 totalResult.getTotalNum(), totalResult.getIncrNum(), totalResult.getRepeatNum(),totalResult.getIllegalNum(), totalResult.getFailNum());
     }
 
