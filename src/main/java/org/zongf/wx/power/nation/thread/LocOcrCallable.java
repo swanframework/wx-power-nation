@@ -49,8 +49,6 @@ public class LocOcrCallable implements Callable<ImgLocOcrResult> {
         ocrResult.setThreadName(Thread.currentThread().getName());
 
         while (true) {
-            ocrResult.addTotalNum(1);
-
             // 获取下一页
             PageBounds pageBounds = new PageBounds(pageNum.getAndIncrement(), pageSize);
 
@@ -70,6 +68,7 @@ public class LocOcrCallable implements Callable<ImgLocOcrResult> {
     }
 
     public void doLocOcr(ImagePO imagePO, ImgLocOcrResult ocrResult) {
+
         boolean success = false;
         try {
             // 查询文件字节流
@@ -85,12 +84,12 @@ public class LocOcrCallable implements Callable<ImgLocOcrResult> {
         } catch (Exception ex) {
             log.info("精确OCR失败,图片id:{}", imagePO.getId(), ex);
         } finally {
-            ocrResult.addTotalNum(1);
             if (success) {
                 ocrResult.addSuccessNum(1);
             }else {
                 ocrResult.addFailNum(1);
             }
+            ocrResult.addTotalNum(1);
         }
 
     }

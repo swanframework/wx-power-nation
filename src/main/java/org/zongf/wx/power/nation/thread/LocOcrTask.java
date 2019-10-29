@@ -24,7 +24,7 @@ public class LocOcrTask {
     private static final int THREAD_NUM = 10;
 
     //
-    private static AtomicInteger pageNum = new AtomicInteger(0);
+    private static AtomicInteger pageNum = new AtomicInteger(1);
 
     private static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_NUM);
 

@@ -46,8 +46,17 @@ public class ImageImportTest {
 
     // 精确ocr
     @Test
-    public void doLocOcr() throws Exception{
+    public void doBatchLoc() throws Exception{
         LocOcrTask.doOcrTask(ImageConstant.CATEGORY_QUESTION);
+    }
+
+    @Test
+    public void doLocOcrOnce() throws Exception {
+        long id = 3;
+        ImagePO imagePO = new ImagePO();
+        imagePO.setId(id);
+        ImgLocOcrResult ocrResult = new ImgLocOcrResult();
+        new LocOcrCallable(null, null).doLocOcr(imagePO, ocrResult);
     }
 
 }
