@@ -40,4 +40,7 @@ public interface ImageMapper {
     // 是否有相同Ocr的图片
     boolean hasSameOcr(@Param("category") String category, @Param("basicOcr") String basicOcr);
 
+    // 更新LocOcr 字段
+    boolean updateLocOcr(@Param("id") Long id, @Param("locOcr") String locOcr);
+
 }

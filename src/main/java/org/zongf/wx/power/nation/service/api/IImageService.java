@@ -1,5 +1,8 @@
 package org.zongf.wx.power.nation.service.api;
 
+import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
+import com.github.miemiedev.mybatis.paginator.domain.PageList;
+import org.apache.ibatis.annotations.Param;
 import org.zongf.wx.power.nation.po.ImagePO;
 import org.zongf.wx.power.nation.vo.TodoImageInfoVO;
 
@@ -27,5 +30,11 @@ public interface IImageService {
 
     // 更新状态
     boolean handleImage(Long id);
+
+    // 分页查询
+    PageList<ImagePO> queryByPager(PageBounds pageBounds, String category, String status);
+
+    // 更新locOcr
+    boolean updateLocOcr(Long id, String locOcr);
 
 }

@@ -51,10 +51,11 @@ public class ImageService implements IImageService {
         return imagePO == null ? null : imagePO.getContent();
     }
 
+    private static int page = 1;
     @Override
     public TodoImageInfoVO queryToDoImage(String type) {
         // 使用分页查询, 查询1页信息
-        PageList<ImagePO> pager = this.imageMapper.queryByPager(new PageBounds(1, 1), type, ImageConstant.STATUS_TODO);
+        PageList<ImagePO> pager = this.imageMapper.queryByPager(new PageBounds(page++, 1), type, ImageConstant.STATUS_DONE_LOC_OCR);
 
         // 如果为空, 则返回null
         if(pager.isEmpty()) return null;
@@ -64,7 +65,17 @@ public class ImageService implements IImageService {
 
     @Override
     public boolean handleImage(Long id) {
-        return this.imageMapper.updateStatus(id, ImageConstant.STATUS_HANDLED);
+        return this.imageMapper.updateStatus(id, ImageConstant.STATUS_CONVERTED_QUESTION);
+    }
+
+    @Override
+    public PageList<ImagePO> queryByPager(PageBounds pageBounds, String category, String status) {
+        return this.imageMapper.queryByPager(pageBounds, category, status);
+    }
+
+    @Override
+    public boolean updateLocOcr(Long id, String locOcr) {
+        return this.imageMapper.updateLocOcr(id, locOcr);
     }
 
 }

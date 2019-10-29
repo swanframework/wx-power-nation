@@ -1,6 +1,6 @@
 package org.zongf.wx.power.nation.vo;
 
-public class ImgImportResult {
+public class ImgBasicOcrResult {
 
     // 线程名
     private String threadName;

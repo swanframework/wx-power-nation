@@ -1,10 +1,9 @@
 package org.zongf.wx.power.nation.thread;
 
-import com.sun.org.apache.regexp.internal.RE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zongf.wx.power.nation.util.FileUtils;
-import org.zongf.wx.power.nation.vo.ImgImportResult;
+import org.zongf.wx.power.nation.vo.ImgBasicOcrResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,17 +30,17 @@ public class BasicOcrTask {
         // 创建阻塞队列
         ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<>(fileNames);
 
-        List<Future<ImgImportResult>> futureList = new ArrayList<>();
+        List<Future<ImgBasicOcrResult>> futureList = new ArrayList<>();
         for (int i = 0; i < THREAD_NUM; i++) {
-            Future<ImgImportResult> future = threadPool.submit(new BasicOcrCallable(queue, category));
+            Future<ImgBasicOcrResult> future = threadPool.submit(new BasicOcrCallable(queue, category));
             futureList.add(future);
         }
 
         // 合并线程执行结果
-        ImgImportResult totalResult = new ImgImportResult();
-        for (Future<ImgImportResult> future : futureList) {
+        ImgBasicOcrResult totalResult = new ImgBasicOcrResult();
+        for (Future<ImgBasicOcrResult> future : futureList) {
             try {
-                ImgImportResult result = future.get();
+                ImgBasicOcrResult result = future.get();
                 log.info("图片导入结果, 线程名:{}, 总数量:{}, 成功数量:{}, 重复数量:{}, 非法图片数量:{}, 失败数量:{}",
                         result.getThreadName(), result.getTotalNum(), result.getIncrNum(), result.getRepeatNum(), result.getIllegalNum(), result.getFailNum());
 

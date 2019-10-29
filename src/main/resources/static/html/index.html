@@ -67,6 +67,9 @@
 
     // 完成选择
     function finish(){
+        loadImage();
+        return;
+
         var title = "";
         // 获取标题
         $("#title li input").each(function () {
@@ -88,7 +91,7 @@
             data: params ,
             success: function(result) {
                 // alert(result);
-                loadImage(imageId + 1);
+                loadImage();
             }
         })
     }
@@ -140,9 +143,9 @@
             focusId = $(this).attr("id");
             answerIdx = $(this).attr("idx");
         });
-
-        loadImage(imageId);
     });
+
+    setInterval(loadImage, 300);
 
 </script>
 </html>

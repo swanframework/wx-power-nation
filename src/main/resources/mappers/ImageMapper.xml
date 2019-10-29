@@ -34,6 +34,13 @@
         where id = #{id}
     </update>
 
+    <!-- 更新locOcr 字段 -->
+    <update id="updateLocOcr">
+        update s_image
+        set locOcr=#{locOcr}, status='1'
+        where id = #{id}
+    </update>
+
     <!-- 新增 -->
     <insert id="save" useGeneratedKeys="true" keyProperty="id">
         insert into s_image(<include refid="columns_all" />)

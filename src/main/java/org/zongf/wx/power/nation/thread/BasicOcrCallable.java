@@ -11,7 +11,7 @@ import org.zongf.wx.power.nation.util.BaiduOcrUtil;
 import org.zongf.wx.power.nation.util.FileUtils;
 import org.zongf.wx.power.nation.util.ImageUtil;
 import org.zongf.wx.power.nation.util.SpringBeanUtil;
-import org.zongf.wx.power.nation.vo.ImgImportResult;
+import org.zongf.wx.power.nation.vo.ImgBasicOcrResult;
 import org.zongf.wx.power.nation.vo.ocr.OcrResponse;
 
 import java.util.Date;
@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @created: 2019-10-27
  * @since 1.0
  */
-public class BasicOcrCallable implements Callable<ImgImportResult> {
+public class BasicOcrCallable implements Callable<ImgBasicOcrResult> {
 
     private Logger log = LoggerFactory.getLogger(BasicOcrCallable.class);
 
@@ -40,8 +40,8 @@ public class BasicOcrCallable implements Callable<ImgImportResult> {
     }
 
     @Override
-    public ImgImportResult call() throws Exception {
-        ImgImportResult importResult = new ImgImportResult();
+    public ImgBasicOcrResult call() throws Exception {
+        ImgBasicOcrResult importResult = new ImgBasicOcrResult();
         importResult.setThreadName(Thread.currentThread().getName());
 
         // 图片路径
@@ -67,7 +67,7 @@ public class BasicOcrCallable implements Callable<ImgImportResult> {
                 ImagePO imagePO = new ImagePO();
                 imagePO.setBasicOcr(ocr);
                 imagePO.setContent(content);
-                imagePO.setStatus(ImageConstant.STATUS_TODO);
+                imagePO.setStatus(ImageConstant.STATUS_DONE_BASIC_OCR);
                 imagePO.setCategory(category);
                 imagePO.setCreateTime(new Date());
 
