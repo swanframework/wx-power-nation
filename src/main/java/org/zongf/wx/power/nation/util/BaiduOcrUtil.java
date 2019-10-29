@@ -150,7 +150,7 @@ public class BaiduOcrUtil {
             OcrResponse ocrResponse = JSONObject.parseObject(result, OcrResponse.class);
 
             // 判断
-            if (StringUtils.isEmpty(ocrResponse.getError_code()) || ocrResponse.getWords_result_num() == 0
+            if (StringUtils.isNotEmpty(ocrResponse.getError_code()) || ocrResponse.getWords_result_num() == 0
                     || ocrResponse.getWords_result() == null || ocrResponse.getWords_result().size() == 0) {
                 return null;
             }else {
