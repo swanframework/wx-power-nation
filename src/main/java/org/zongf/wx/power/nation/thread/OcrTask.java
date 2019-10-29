@@ -1,6 +1,7 @@
 package org.zongf.wx.power.nation.thread;
 
 import org.zongf.wx.power.nation.po.ImagePO;
+import org.zongf.wx.power.nation.util.FileUtils;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -14,23 +15,20 @@ import java.util.concurrent.Executors;
  */
 public class OcrTask {
 
-    private static final int THREAD_NUM = 10;
+    private static final int THREAD_NUM = 1;
 
     private static ExecutorService threadPool = Executors.newFixedThreadPool(THREAD_NUM);
 
+    public static void doOcrTask(String imgDir, String category){
 
-    /** 进行OCR 解析
-     * @param fileList 文件列表
-     * @since 1.0
-     * @author zongf
-     * @created 2019-10-27
-     */
-    public static void doOcrTask(String ak, String sk, List<ImagePO> fileList){
+        // 读取文件夹中所有图片文件
+        List<String> fileNames = FileUtils.getFileNames(imgDir);
+
         // 创建阻塞队列
-        ConcurrentLinkedQueue<ImagePO> queue = new ConcurrentLinkedQueue<>(fileList);
+        ConcurrentLinkedQueue<String> queue = new ConcurrentLinkedQueue<>(fileNames);
 
         for (int i = 0; i < THREAD_NUM; i++) {
-            threadPool.submit(new OcrRunnable(ak, sk, queue));
+            threadPool.submit(new OcrRunnable(queue, category));
         }
     }
 

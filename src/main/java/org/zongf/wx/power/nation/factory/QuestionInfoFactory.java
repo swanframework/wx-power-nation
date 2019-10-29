@@ -23,7 +23,7 @@ public class QuestionInfoFactory {
         if(imagePO == null) return null;
 
         // 反向序列化ocr 结果
-        OcrResponse ocrResponse = JSONObject.parseObject(imagePO.getOcr(), OcrResponse.class);
+        OcrResponse ocrResponse = JSONObject.parseObject(imagePO.getBasicOcr(), OcrResponse.class);
 
         // 题目列表
         List<String> titleList = new ArrayList<>();
@@ -73,7 +73,6 @@ public class QuestionInfoFactory {
         // 转换对象
         QuestionInfoVo questionInfoVo = new QuestionInfoVo();
         questionInfoVo.setId(imagePO.getId());
-        questionInfoVo.setImageName(imagePO.getName());
         questionInfoVo.setTitleList(titleList);
         questionInfoVo.setAnswerList(answerList);
         return questionInfoVo;

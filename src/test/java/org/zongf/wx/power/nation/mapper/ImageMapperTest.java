@@ -5,11 +5,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.zongf.wx.power.nation.BaiduConstant;
+import org.zongf.wx.power.nation.constant.ImageConstant;
 import org.zongf.wx.power.nation.po.ImagePO;
 import org.zongf.wx.power.nation.service.impl.ImageService;
-import org.zongf.wx.power.nation.util.BaiduOcrUtil;
-import org.zongf.wx.power.nation.util.FileUtils;
+import org.zongf.wx.power.nation.thread.OcrTask;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -24,40 +23,21 @@ import java.util.Date;
 @SpringBootTest
 public class ImageMapperTest {
 
-    @Autowired
-    private ImageService imageService;
-
-
     @Test
-    public void save() throws Exception {
+    public void batchImportImages() throws Exception{
 
-        String imagePath = "/media/zongf/document/xxqg-imags/20191027/Screenshot_2019-10-27-13-29-41.png";
+        String imageDir = "F:\\study-app\\20191027";
 
-        byte[] bytes = Files.readAllBytes(Paths.get(imagePath));
+        OcrTask.doOcrTask(imageDir, ImageConstant.CATEGORY_QUESTION);
 
-        ImagePO imagePO = new ImagePO();
-        imagePO.setName("测试图片");
-        imagePO.setContent(bytes);
-        imagePO.setCreateTime(new Date());
-        imagePO.setType("1");
-        imagePO.setOcr("ocr");
-
-        System.out.println(imagePO.getContent().length);
-//        this.imageService.save(imagePO);
+        Thread.sleep(Integer.MAX_VALUE);
     }
 
     @Test
-    public void batchSave() {
-        String imagePath = "/workspace/zongf/wx-power-nation/src/main/resources/images";
-        this.imageService.batchSave(BaiduConstant.AK, BaiduConstant.SK, imagePath,"1");
-
-        try {
-            Thread.sleep(Integer.MAX_VALUE);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void test(){
+        String str = "{\"words_result\":[{\"words\":\"中国人民银行是否可以向任何单位和个人提供\"},{\"words\":\"担保?\"},{\"words\":\"都不可提供\"},{\"words\":\"都可提供\"},{\"words\":\"可向单位提供,不可向个人提供\"},{\"words\":\"可向个人提供,不可向单位提供\"}],\"words_result_num\":7}";
+        System.out.println(str.length());
     }
-
 
 
 }

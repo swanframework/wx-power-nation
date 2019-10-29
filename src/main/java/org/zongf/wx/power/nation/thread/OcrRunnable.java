@@ -3,11 +3,14 @@ package org.zongf.wx.power.nation.thread;
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zongf.wx.power.nation.constant.ImageConstant;
 import org.zongf.wx.power.nation.mapper.ImageMapper;
-import org.zongf.wx.power.nation.mapper.QuestionMapper;
 import org.zongf.wx.power.nation.po.ImagePO;
-import org.zongf.wx.power.nation.po.QuestionPO;
+import org.zongf.wx.power.nation.service.api.IImageService;
+import org.zongf.wx.power.nation.service.impl.ImageService;
 import org.zongf.wx.power.nation.util.BaiduOcrUtil;
+import org.zongf.wx.power.nation.util.FileUtils;
+import org.zongf.wx.power.nation.util.ImageUtil;
 import org.zongf.wx.power.nation.util.SpringBeanUtil;
 import org.zongf.wx.power.nation.vo.ocr.OcrResponse;
 
@@ -23,57 +26,49 @@ public class OcrRunnable implements Runnable{
 
     private Logger log = LoggerFactory.getLogger(OcrRunnable.class);
 
-    private ConcurrentLinkedQueue<ImagePO> imageQueue;
+    private ConcurrentLinkedQueue<String> imageFilePathQueue;
 
-    private ImageMapper imageMapper;
+    private IImageService imageService;
 
-    private String ak;
+    private String category;
 
-    private String sk;
-
-    public OcrRunnable(String ak, String sk, ConcurrentLinkedQueue<ImagePO> imageQueue) {
-        this.imageQueue = imageQueue;
-        this.imageMapper = SpringBeanUtil.getBean(ImageMapper.class);
-        this.ak = ak;
-        this.sk = sk;
+    public OcrRunnable(ConcurrentLinkedQueue<String> imageQueue, String category) {
+        this.imageFilePathQueue = imageQueue;
+        this.category = category;
+        this.imageService = SpringBeanUtil.getBean(ImageService.class);
     }
 
     @Override
     public void run() {
 
-        ImagePO imagePO = null;
+        String imgFilePath = null;
 
-        while ((imagePO = imageQueue.poll()) != null) {
+        while ((imgFilePath = imageFilePathQueue.poll()) != null) {
+
+            byte[] content = FileUtils.getFileBytes(imgFilePath);
 
             // 进行百度ocr 解析
-            OcrResponse ocrResponse = BaiduOcrUtil.doBasicOcr(ak, sk, imagePO.getContent());
-
-            // 处理第一行信息, 如果以NB开头, 则表示为时间状态栏
-            String firstLine = ocrResponse.getWords_result().get(0).getWords();
-            if (firstLine.startsWith("NB")) {
-                ocrResponse.getWords_result().remove(0);
-            }
+            OcrResponse ocrResponse = BaiduOcrUtil.doBasicOcr(content);
 
             try {
                 String ocr = JSONObject.toJSONString(ocrResponse);
-                // 如果不存在相同的ocr, 则入库
 
-                // 如果图片中包含"结束本局"关键字, 则为错误图片,忽略
-                if (ocr.contains("结束本局")) {
-                    log.info("错误图片, 图片信息:{}", imagePO);
+                if (!ImageConstant.TYPE_ANSWERING.equals(ImageUtil.getImageType(ocr))) {
+                    log.info("图片非答题图片, 图片:{}");
                     continue;
                 }
 
-                // 如果图片中已存在相同的ocr, 则忽略
-                if (imageMapper.hasSameOcr(imagePO.getType(), ocr)) {
-                    log.info("保存图片失败, 图片库中已存在相同类型且相同ocr的记录, 图片信息:{}", imagePO);
-                }else {
-                    imagePO.setOcr(ocr);
-                    imagePO.setCreateTime(new Date());
-                    this.imageMapper.save(imagePO);
-                }
+                ImagePO imagePO = new ImagePO();
+                imagePO.setBasicOcr(ocr);
+                imagePO.setContent(content);
+                imagePO.setStatus(ImageConstant.STATUS_TODO);
+                imagePO.setCategory(category);
+                imagePO.setCreateTime(new Date());
+
+                this.imageService.save(imagePO);
+
             } catch (Exception ex) {
-                log.info("保存图片失败, 图片路径:{}, 失败原因:{}", imagePO, ex.getMessage());
+                log.info("保存图片失败, 图片路径:{}, 失败原因:{}", imgFilePath, ex.getMessage());
             }
         }
     }

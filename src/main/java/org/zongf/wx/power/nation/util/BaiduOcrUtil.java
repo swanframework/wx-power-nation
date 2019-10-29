@@ -9,6 +9,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zongf.wx.power.nation.config.BaiduAccoutConfig;
 import org.zongf.wx.power.nation.exception.OcrException;
 import org.zongf.wx.power.nation.vo.ocr.AccessTokenResponse;
 import org.zongf.wx.power.nation.vo.ocr.OcrResponse;
@@ -75,8 +76,8 @@ public class BaiduOcrUtil {
      * @author zongf
      * @created 2019-10-25
      */
-    public static OcrResponse doBasicOcr(String ak, String sk, byte[] bytes){
-        return doOcr(ak, sk, bytes, URL_BASIC_OCR);
+    public static OcrResponse doBasicOcr(byte[] bytes){
+        return doOcr(BaiduAccoutConfig.AK, BaiduAccoutConfig.SK, bytes, URL_BASIC_OCR);
     }
 
     /** 提取图片中的文字, 包含文字位置信息
@@ -86,8 +87,8 @@ public class BaiduOcrUtil {
      * @author zongf
      * @created 2019-10-25
      */
-    public static OcrResponse doLocationOcr(String ak, String sk, byte[] bytes) {
-        return doOcr(ak, sk, bytes, URL_LOCATION_OCR);
+    public static OcrResponse doLocationOcr(byte[] bytes) {
+        return doOcr(BaiduAccoutConfig.AK, BaiduAccoutConfig.SK, bytes, URL_LOCATION_OCR);
     }
 
 
@@ -121,7 +122,13 @@ public class BaiduOcrUtil {
 
             log.info("图片orc解析完成, 结果:{}", result);
 
-            return JSONObject.parseObject(result, OcrResponse.class);
+            OcrResponse ocrResponse = JSONObject.parseObject(result, OcrResponse.class);
+
+            // 处理首行字符, 第一行可能为时间, 如 N:10:25, NB:11:22
+            handleFirstLine(ocrResponse);
+
+            return ocrResponse;
+
         } catch (Exception e) {
             throw new OcrException("调用ocr 服务异常", e);
         }
@@ -168,4 +175,20 @@ public class BaiduOcrUtil {
         byte[] base64 = Base64.getEncoder().encode(bytes);
         return new String(base64);
     }
+
+    /** 处理首行字符, 首行可能为时间行
+     * @param ocrResponse
+     * @since 1.0
+     * @author zongf
+     * @created 2019-10-29
+     */
+    private static void handleFirstLine(OcrResponse ocrResponse) {
+        if (ocrResponse != null && ocrResponse.getWords_result() != null && ocrResponse.getWords_result().size() > 0) {
+            String firstLine = ocrResponse.getWords_result().get(0).getWords();
+            if(firstLine.length() <10 &&(firstLine.startsWith("N") || firstLine.startsWith("NB"))){
+                ocrResponse.getWords_result().remove(0);
+            }
+        }
+    }
+
 }

@@ -7,11 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.zongf.wx.power.nation.constant.ImageConstant;
 import org.zongf.wx.power.nation.mapper.ImageMapper;
 import org.zongf.wx.power.nation.po.ImagePO;
 import org.zongf.wx.power.nation.service.api.IImageService;
 import org.zongf.wx.power.nation.thread.OcrTask;
 import org.zongf.wx.power.nation.util.FileUtils;
+import org.zongf.wx.power.nation.vo.LatestImageInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +32,12 @@ public class ImageService implements IImageService {
     private ImageMapper imageMapper;
 
     @Override
-    public ImagePO queryById(Long id) {
-        return this.imageMapper.findById(id);
-    }
-
-    @Override
-    public PageList<ImagePO> queryPager(PageBounds pageBounds, String type, String status) {
-        return this.imageMapper.queryByPager(pageBounds, type, status);
+    public synchronized boolean save(ImagePO imagePO) {
+        if (this.imageMapper.hasSameOcr(imagePO.getCategory(), imagePO.getBasicOcr())) {
+            log.warn("图片已存在");
+            return false;
+        }
+        return this.imageMapper.save(imagePO);
     }
 
     @Override
@@ -45,31 +46,25 @@ public class ImageService implements IImageService {
     }
 
     @Override
-    public boolean batchSave(String ak, String sk, String path, String type) {
-
-        // 1. 比较数据库去重
-        List<String> fileNames = FileUtils.getFileNames(path);
-
-        // 处理新增的图片
-        List<ImagePO> imagePOList = new ArrayList<>();
-        for (String filePath : fileNames) {
-            String fileName = StringUtils.substringAfterLast(filePath, "/");
-            if (this.imageMapper.hasSameName(fileName)) {
-                log.info("图片库中已存在相同名称的图片:{}",fileName);
-            }else {
-                ImagePO imagePO = new ImagePO();
-                imagePO.setContent(FileUtils.getFileBytes(filePath));
-                imagePO.setName(fileName);
-                imagePO.setType(type);
-                imagePOList.add(imagePO);
-            }
-        }
-
-        // 2. 多线程调用百度ocr
-        if (imagePOList.size() > 0) {
-            OcrTask.doOcrTask(ak, sk, imagePOList);
-        }
-
-        return false;
+    public ImagePO queryInfo(Long id) {
+        return this.imageMapper.queryInfo(id);
     }
+
+    @Override
+    public byte[] queryContent(Long id) {
+        return this.imageMapper.queryContent(id);
+    }
+
+    @Override
+    public LatestImageInfo queryToDoImage(String type) {
+        PageList<ImagePO> imagePOS = this.imageMapper.queryByPager(new PageBounds(1, 1), type, ImageConstant.STATUS_TODO);
+        if(imagePOS.isEmpty()) return null;
+        return new LatestImageInfo(imagePOS.get(0),imagePOS.getPaginator().getTotalCount());
+    }
+
+    @Override
+    public boolean handleImage(Long id) {
+        return this.imageMapper.updateStatus(id, ImageConstant.STATUS_HANDLED);
+    }
+
 }
