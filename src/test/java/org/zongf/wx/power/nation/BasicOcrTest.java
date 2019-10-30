@@ -50,16 +50,8 @@ public class BasicOcrTest {
 
     // 精准ocr
     @Test
-    public void accurateOcr() throws Exception{
-
-        ImagePO imagePO = this.imageMapper.queryContent(3l);
-
-        OcrResponse ocrResponse = BaiduOcrUtil.doBasicAccurateOcr(imagePO.getContent());
-
-        String basicOcr = JSONObject.toJSONStringWithDateFormat(ocrResponse, "yyyy.MM.dd", SerializerFeature.PrettyFormat);
-
-        System.out.println(basicOcr);
-
+    public void batchAccurateOcr() throws Exception{
+        this.imageService.batchAccurateOcr(ImageConstant.CATEGORY_QUESTION);
     }
 
 }
