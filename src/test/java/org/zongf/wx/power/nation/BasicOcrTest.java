@@ -1,5 +1,7 @@
 package org.zongf.wx.power.nation;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +12,8 @@ import org.zongf.wx.power.nation.mapper.ImageMapper;
 import org.zongf.wx.power.nation.po.ImagePO;
 import org.zongf.wx.power.nation.service.api.IImageService;
 import org.zongf.wx.power.nation.thread.BasicOcrTask;
-import org.zongf.wx.power.nation.thread.BasicAccurateOcrCallable;
-import org.zongf.wx.power.nation.thread.BasicAccurateOcrTask;
-import org.zongf.wx.power.nation.vo.ImgLocOcrResult;
+import org.zongf.wx.power.nation.util.BaiduOcrUtil;
+import org.zongf.wx.power.nation.vo.ocr.OcrResponse;
 
 /**
  * @author: zongf
@@ -21,7 +22,7 @@ import org.zongf.wx.power.nation.vo.ImgLocOcrResult;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ImageImportTest {
+public class BasicOcrTest {
 
     @Autowired
     private IImageService imageService;
@@ -29,7 +30,7 @@ public class ImageImportTest {
     @Autowired
     private ImageMapper imageMapper;
 
-    // 批量导入，并做基础的ocr
+    // 批量导入图片，并做基础的ocr
     @Test
     public void batchImportImages() throws Exception{
         long start = System.currentTimeMillis();
@@ -38,7 +39,7 @@ public class ImageImportTest {
         String imageDir = "G:\\study-app\\20191027";
 
         // 全部图片
-//        imageDir = "G:\\study-app\\xxqg-imags";
+        imageDir = "F:\\study-app\\xxqg-imags";
 
         // 开始批量导入
         BasicOcrTask.doOcrTask(imageDir, ImageConstant.CATEGORY_QUESTION);
@@ -47,24 +48,18 @@ public class ImageImportTest {
         System.out.println("解析完成, 耗时:" + (end -start) + " ms");
     }
 
-    // 精确ocr
+    // 精准ocr
     @Test
-    public void doBatchLoc() throws Exception{
-        BasicAccurateOcrTask.doOcrTask(ImageConstant.CATEGORY_QUESTION);
-    }
+    public void accurateOcr() throws Exception{
 
-    @Test
-    public void doLocOcrOnce() throws Exception {
-        long id = 2;
-        ImagePO imagePO = new ImagePO();
-        imagePO.setId(id);
-        ImgLocOcrResult ocrResult = new ImgLocOcrResult();
-        new BasicAccurateOcrCallable(null, null).doLocOcr(imagePO, ocrResult);
-    }
+        ImagePO imagePO = this.imageMapper.queryContent(3l);
 
-    @Test
-    public void doAccurateOcr(){
-        this.imageService.batchAccurateOcr(ImageConstant.CATEGORY_QUESTION);
+        OcrResponse ocrResponse = BaiduOcrUtil.doBasicAccurateOcr(imagePO.getContent());
+
+        String basicOcr = JSONObject.toJSONStringWithDateFormat(ocrResponse, "yyyy.MM.dd", SerializerFeature.PrettyFormat);
+
+        System.out.println(basicOcr);
+
     }
 
 }

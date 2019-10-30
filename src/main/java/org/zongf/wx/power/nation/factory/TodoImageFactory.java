@@ -23,7 +23,7 @@ public class TodoImageFactory {
         if(imagePO == null) return null;
 
         // 反向序列化ocr 结果
-        OcrResponse ocrResponse = JSONObject.parseObject(imagePO.getBasicOcr(), OcrResponse.class);
+        OcrResponse ocrResponse = JSONObject.parseObject(imagePO.getAccurateOcr(), OcrResponse.class);
 
         // 题目列表
         List<String> titleList = new ArrayList<>();
