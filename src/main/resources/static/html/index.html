@@ -34,8 +34,8 @@
         </div>
         <!-- 按钮区 -->
         <div id="btns">
-            <button type="button" class="textbox" onclick="insert('###，')">插入###，</button>
-            <button type="button" class="textbox" onclick="insert('###。')">插入###。</button>
+            <button type="button" class="textbox" onclick="insert('___')">插入___</button>
+            <button type="button" class="textbox" onclick="insert('（ ）')">插入（ ）</button>
             <button type="button" class="textbox" onclick="insert('，')">插入，</button>
             <button type="button" class="textbox" onclick="insert('。')">插入。</button>
             <button type="button" class="textbox" onclick="mergePre()">合并至上一行</button>
@@ -67,13 +67,12 @@
 
     // 完成选择
     function finish(){
-        loadImage();
-        return;
-
+        var titleLines = 0;
         var title = "";
         // 获取标题
         $("#title li input").each(function () {
             title += $(this).val().trim();
+            titleLines++;
         });
 
         // 如果未选择答案,则抛出提示
@@ -82,23 +81,22 @@
             return;
         }
 
-        var params = "&title=" + title + "&answer=" + answer + "&imageId=" + imageId
+        var params = "title=" + title + "&answer=" + answer + "&imageId=" + imageId
                 + "&titleLines=" + titleLines + "&answerIdx=" + answerIdx;
-
         $.ajax({
             url:"/question",
             method:"POST",
             data: params ,
             success: function(result) {
-                // alert(result);
                 loadImage();
             }
         })
     }
 
+    // 加载图片
     function loadImage(){
         $.ajax({
-            url:"/image/todo?type=1",
+            url:"/image/nextAnswer?category=1",
             method:"GET",
             success: function(result) {
                 // 保存id
@@ -148,7 +146,7 @@
     // 初始化加载
     loadImage();
 
-    // setInterval(loadImage, 1000);
+    // setInterval(loadImage, 200);
 
 </script>
 </html>
