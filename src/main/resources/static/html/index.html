@@ -68,7 +68,7 @@
         var title = $("#" + focusId).val();
         var prevId = focusId -1;
         var preTitle = $("#" + prevId).val();
-        $("#" + prevId).val(preTitle);
+        $("#" + prevId).val(preTitle + title);
         $("#" + focusId).remove();
         titleLines = titleLines -1;
     }
