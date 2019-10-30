@@ -2,10 +2,7 @@ package org.zongf.wx.power.nation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.zongf.wx.power.nation.service.api.IImageService;
 import org.zongf.wx.power.nation.vo.TodoImageInfoVO;
 
@@ -32,10 +29,16 @@ public class ImageController {
         }
     }
 
-    // 查询待处理的图片
+    // 查询下一个待解析的图片
     @ResponseBody
-    @GetMapping("/todo")
-    public TodoImageInfoVO getImageInfo(String type) throws Exception {
-        return this.imageService.queryToDoImage(type);
+    @GetMapping("/nextAnswer")
+    public TodoImageInfoVO getNextAnswer(String category) {
+        return this.imageService.queryToDoImage(category);
+    }
+
+    // 删除图片
+    @DeleteMapping("/{id}")
+    public boolean getImage(@PathVariable long id) throws Exception {
+        return this.imageService.delete(id);
     }
 }
