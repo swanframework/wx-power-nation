@@ -16,9 +16,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @created: 2019-10-27
  * @since 1.0
  */
-public class LocOcrTask {
+public class BasicAccurateOcrTask {
 
-    static Logger log = LoggerFactory.getLogger(LocOcrTask.class);
+    static Logger log = LoggerFactory.getLogger(BasicAccurateOcrTask.class);
 
     // 线程数
     private static final int THREAD_NUM = 10;
@@ -33,7 +33,7 @@ public class LocOcrTask {
         // 创建多线程任务
         List<Future<ImgLocOcrResult>> futureList = new ArrayList<>();
         for (int i = 0; i < THREAD_NUM; i++) {
-            Future<ImgLocOcrResult> future = threadPool.submit(new LocOcrCallable(category, pageNum));
+            Future<ImgLocOcrResult> future = threadPool.submit(new BasicAccurateOcrCallable(category, pageNum));
             futureList.add(future);
         }
 

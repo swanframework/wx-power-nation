@@ -8,9 +8,9 @@ public class ThreadUtil {
 
     private static Logger logger = LoggerFactory.getLogger(ThreadUtil.class);
 
-    public static void sleep(int seconds) {
+    public static void sleep(float seconds) {
         try {
-            Thread.sleep(seconds * 1000);
+            Thread.sleep((long) (seconds * 1000));
         } catch (Exception e) {
             logger.info("休眠被中断");
         }

@@ -12,7 +12,6 @@ import org.zongf.wx.power.nation.service.api.IImageService;
 import org.zongf.wx.power.nation.service.impl.ImageService;
 import org.zongf.wx.power.nation.util.BaiduOcrUtil;
 import org.zongf.wx.power.nation.util.SpringBeanUtil;
-import org.zongf.wx.power.nation.vo.ImgBasicOcrResult;
 import org.zongf.wx.power.nation.vo.ImgLocOcrResult;
 import org.zongf.wx.power.nation.vo.ocr.OcrResponse;
 
@@ -24,9 +23,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @created: 2019-10-27
  * @since 1.0
  */
-public class LocOcrCallable implements Callable<ImgLocOcrResult> {
+public class BasicAccurateOcrCallable implements Callable<ImgLocOcrResult> {
 
-    private Logger log = LoggerFactory.getLogger(LocOcrCallable.class);
+    private Logger log = LoggerFactory.getLogger(BasicAccurateOcrCallable.class);
 
     private IImageService imageService;
 
@@ -36,7 +35,7 @@ public class LocOcrCallable implements Callable<ImgLocOcrResult> {
 
     private final int pageSize = 5;
 
-    public LocOcrCallable(String category, AtomicInteger pageNum) {
+    public BasicAccurateOcrCallable(String category, AtomicInteger pageNum) {
         this.imageService = SpringBeanUtil.getBean(ImageService.class);
         this.category = category;
         this.pageNum = pageNum;
@@ -75,7 +74,7 @@ public class LocOcrCallable implements Callable<ImgLocOcrResult> {
             byte[] content = this.imageService.queryContent(imagePO.getId());
 
             // 调用百度locOcr 接口
-            OcrResponse ocrResponse = BaiduOcrUtil.doLocationOcr(content);
+            OcrResponse ocrResponse = BaiduOcrUtil.doBasicAccurateOcr(content);
 
             // 更新数据库
             if (ocrResponse != null) {

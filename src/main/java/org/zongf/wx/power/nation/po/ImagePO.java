@@ -22,8 +22,8 @@ public class ImagePO {
     // 低精度ocr
     private String basicOcr;
 
-    // 高精度ocr, 包含位置
-    private String locOcr;
+    // 高精度ocr
+    private String accurateOcr;
 
     // 图片状态: 0 待处理 1 已经处理
     private String status;
@@ -63,12 +63,12 @@ public class ImagePO {
 		this.basicOcr = basicOcr;
 	}
 
-	public String getLocOcr() {
-		return locOcr;
+	public String getAccurateOcr() {
+		return accurateOcr;
 	}
 
-	public void setLocOcr(String locOcr) {
-		this.locOcr = locOcr;
+	public void setAccurateOcr(String accurateOcr) {
+		this.accurateOcr = accurateOcr;
 	}
 
 	public String getStatus() {
@@ -94,7 +94,7 @@ public class ImagePO {
 				", content=" + Arrays.toString(content) +
 				", type='" + category + '\'' +
 				", basicOcr='" + basicOcr + '\'' +
-				", locOrc='" + locOcr + '\'' +
+				", locOrc='" + accurateOcr + '\'' +
 				", status='" + status + '\'' +
 				", createTime=" + createTime +
 				'}';

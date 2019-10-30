@@ -33,13 +33,11 @@ public class BaiduOcrUtil {
     // 获取token 地址
     private static final String URL_REQUEST_TOKEN = "https://aip.baidubce.com/oauth/2.0/token";
 
-    // 不含位置信息地址
+    // 通用文字解析基础版
     private static final String URL_BASIC_OCR = "https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic";
 
-    // 含位置信息地址
-    private static final String URL_LOCATION_OCR = "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate";
-
-
+    // 通用文字解析精确版
+    private static final String URL_LOCATION_BASIC_ACCURATE_OCR = "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic";
 
 	public BaiduOcrUtil() {
         super();
@@ -80,15 +78,8 @@ public class BaiduOcrUtil {
     public static OcrResponse doBasicOcr(byte[] bytes){
         OcrResponse ocrResponse = doOcr(BaiduAccoutConfig.AK, BaiduAccoutConfig.SK, bytes, URL_BASIC_OCR);
 
-        // 如果请求不为空, 则处理请求头
-        if (ocrResponse != null) {
-            String firstLine = ocrResponse.getWords_result().get(0).getWords();
-            if(firstLine.length() <10 &&
-                    (firstLine.startsWith("N") || firstLine.startsWith("B") || firstLine.startsWith("NB"))){
-                ocrResponse.getWords_result().remove(0);
-                ocrResponse.setWords_result_num(ocrResponse.getWords_result_num() -1);
-            }
-        }
+        // 处理第一行数据 , 第一行可能为时间
+        handleFirstLine(ocrResponse);
 
         return ocrResponse;
     }
@@ -100,22 +91,14 @@ public class BaiduOcrUtil {
      * @author zongf
      * @created 2019-10-25
      */
-    public static OcrResponse doLocationOcr(byte[] bytes) {
-        OcrResponse ocrResponse = doOcr(BaiduAccoutConfig.AK, BaiduAccoutConfig.SK, bytes, URL_LOCATION_OCR);
+    public static OcrResponse doBasicAccurateOcr(byte[] bytes) {
+        OcrResponse ocrResponse = doOcr(BaiduAccoutConfig.AK, BaiduAccoutConfig.SK, bytes, URL_LOCATION_BASIC_ACCURATE_OCR);
 
-        if (ocrResponse != null) {
-            Iterator<TextArea> iterator = ocrResponse.getWords_result().iterator();
-            while (iterator.hasNext()) {
-                TextArea textArea = iterator.next();
-                if (textArea.getLocation().getTop() < 50) {
-                    iterator.remove();
-                }
-            }
-        }
+        // 处理第一行数据 , 第一行可能为时间
+        handleFirstLine(ocrResponse);
 
         return ocrResponse;
     }
-
 
     /** 图片进行ocr 文件转换
      * @param url ocr连接地址, 不同精度的ocr, 链接地址不同
@@ -214,8 +197,7 @@ public class BaiduOcrUtil {
     private static void handleFirstLine(OcrResponse ocrResponse) {
         if (ocrResponse != null && ocrResponse.getWords_result() != null && ocrResponse.getWords_result().size() > 0) {
             String firstLine = ocrResponse.getWords_result().get(0).getWords();
-            if(firstLine.length() <10 &&
-                    (firstLine.startsWith("N") || firstLine.startsWith("B") || firstLine.startsWith("NB"))){
+            if(firstLine.length() <10 ){
                 ocrResponse.getWords_result().remove(0);
                 ocrResponse.setWords_result_num(ocrResponse.getWords_result_num() -1);
             }

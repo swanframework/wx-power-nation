@@ -5,7 +5,7 @@
 <mapper namespace="org.zongf.wx.power.nation.mapper.ImageMapper">
 
     <sql id="columns_basic">
-        id, category, status, basicOcr, locOcr, createTime
+        id, category, status, basicOcr, accurateOcr, createTime
     </sql>
 
     <!-- 定义所有字段 -->
@@ -35,16 +35,16 @@
     </update>
 
     <!-- 更新locOcr 字段 -->
-    <update id="updateLocOcr">
+    <update id="updateAccurateOcr">
         update s_image
-        set locOcr=#{locOcr}, status='1'
+        set accurateOcr=#{accurateOcr}, status='1'
         where id = #{id}
     </update>
 
     <!-- 新增 -->
     <insert id="save" useGeneratedKeys="true" keyProperty="id">
         insert into s_image(<include refid="columns_all" />)
-        values (null, #{category}, #{status}, #{basicOcr}, #{locOcr}, #{createTime}, #{content})
+        values (null, #{category}, #{status}, #{basicOcr}, #{accurateOcr}, #{createTime}, #{content})
     </insert>
 
     <!-- 删除 -->
@@ -63,6 +63,12 @@
         select count(id)
         from s_image
         where category = #{category} and basicOcr = #{basicOcr}
+    </select>
+
+    <select id="queryNextToDoAccurateOcr" resultType="org.zongf.wx.power.nation.po.ImagePO">
+        select <include refid="columns_all" />
+        from s_image
+        where category = #{category} and status = '0' limit 1
     </select>
 
     <!-- 清空表中数据, 同时重置自增序列从0开始 -->

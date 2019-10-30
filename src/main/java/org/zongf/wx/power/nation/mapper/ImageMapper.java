@@ -41,6 +41,9 @@ public interface ImageMapper {
     boolean hasSameOcr(@Param("category") String category, @Param("basicOcr") String basicOcr);
 
     // 更新LocOcr 字段
-    boolean updateLocOcr(@Param("id") Long id, @Param("locOcr") String locOcr);
+    boolean updateAccurateOcr(@Param("id") Long id, @Param("accurateOcr") String locOcr);
+
+    // 查询下一条待做精确OCR 的记录
+    ImagePO queryNextToDoAccurateOcr(String category);
 
 }

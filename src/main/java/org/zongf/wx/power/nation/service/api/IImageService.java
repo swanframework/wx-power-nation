@@ -37,4 +37,7 @@ public interface IImageService {
     // 更新locOcr
     boolean updateLocOcr(Long id, String locOcr);
 
+    // 批量更新AccurateOcr 字段
+    boolean batchAccurateOcr(String category);
+
 }

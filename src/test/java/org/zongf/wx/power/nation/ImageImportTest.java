@@ -1,7 +1,5 @@
 package org.zongf.wx.power.nation;
 
-import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
-import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +10,8 @@ import org.zongf.wx.power.nation.mapper.ImageMapper;
 import org.zongf.wx.power.nation.po.ImagePO;
 import org.zongf.wx.power.nation.service.api.IImageService;
 import org.zongf.wx.power.nation.thread.BasicOcrTask;
-import org.zongf.wx.power.nation.thread.LocOcrCallable;
-import org.zongf.wx.power.nation.thread.LocOcrTask;
+import org.zongf.wx.power.nation.thread.BasicAccurateOcrCallable;
+import org.zongf.wx.power.nation.thread.BasicAccurateOcrTask;
 import org.zongf.wx.power.nation.vo.ImgLocOcrResult;
 
 /**
@@ -52,16 +50,21 @@ public class ImageImportTest {
     // 精确ocr
     @Test
     public void doBatchLoc() throws Exception{
-        LocOcrTask.doOcrTask(ImageConstant.CATEGORY_QUESTION);
+        BasicAccurateOcrTask.doOcrTask(ImageConstant.CATEGORY_QUESTION);
     }
 
     @Test
     public void doLocOcrOnce() throws Exception {
-        long id = 3;
+        long id = 2;
         ImagePO imagePO = new ImagePO();
         imagePO.setId(id);
         ImgLocOcrResult ocrResult = new ImgLocOcrResult();
-        new LocOcrCallable(null, null).doLocOcr(imagePO, ocrResult);
+        new BasicAccurateOcrCallable(null, null).doLocOcr(imagePO, ocrResult);
+    }
+
+    @Test
+    public void doAccurateOcr(){
+        this.imageService.batchAccurateOcr(ImageConstant.CATEGORY_QUESTION);
     }
 
 }

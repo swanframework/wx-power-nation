@@ -1,7 +1,5 @@
 package org.zongf.wx.power.nation;
 
-import org.junit.Test;
-import org.zongf.wx.power.nation.config.BaiduAccoutConfig;
 import org.zongf.wx.power.nation.util.BaiduOcrUtil;
 import org.zongf.wx.power.nation.util.FileUtils;
 import org.zongf.wx.power.nation.vo.ocr.OcrResponse;
@@ -31,7 +29,7 @@ public class BaiduOcrUtilTest {
 
         String imgPath = "/home/zongf/Desktop/imgs/1.jpg";
 
-        OcrResponse basicOcrResponse = BaiduOcrUtil.doLocationOcr(FileUtils.getFileBytes(imgPath));
+        OcrResponse basicOcrResponse = BaiduOcrUtil.doBasicAccurateOcr(FileUtils.getFileBytes(imgPath));
 
         for (TextArea textArea : basicOcrResponse.getWords_result()) {
             System.out.println(textArea.getLocation() + " --> " + textArea.getWords());
