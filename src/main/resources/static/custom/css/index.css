@@ -66,7 +66,7 @@
 #question{
     width: 330px;
     height: 510px;
-    margin: 90px 15px 20px 15px;
+    margin: 76px 15px 20px 15px;
     background-color: #FFF;
     border-radius: 5px;
     text-align: center
@@ -93,12 +93,12 @@
 }
 
 #answer li{ /* 答题选项*/
-    height: 50px;
-    line-height: 50px;
+    height: 46px;
+    line-height: 46px;
     border: 1px solid #3d3d3d;
     border-radius: 30px;
     margin-top: 10px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
     text-align: left;
     padding-left: 20px;

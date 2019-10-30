@@ -53,19 +53,23 @@ public class ToParserImgInfoFactory {
             String textLine = convertEnSign(textArea.getWords());
             textLines.add(textLine);
         }
+        // 处理最后一行. 如果最后一行以出题:开头, 则移除
+        if (textLines.get(textLines.size() - 1).startsWith("出题")) {
+            textLines.remove(textLines.size() - 1);
+        }
 
         // 计算标题行数
         int titleLines = 1;
         for (int i = 1; i < textLines.size(); i++) {
             String line = textLines.get(i).trim();
             if (line.endsWith("。") || line.endsWith("？") || line.endsWith("？") || line.endsWith("！")
-                || line.endsWith("）")) {
-                titleLines = i;
+                || line.endsWith(")")) {
+                titleLines = i+1;
             }
         }
 
-        // 如果答案行数大于4,那么说明可能解析有误, 设置答案选项为4
-        if (textLines.size() - titleLines > 4) {
+        // 如果答案行数大于6,那么说明可能解析有误, 设置答案选项为4
+        if (textLines.size() - titleLines > 6) {
             titleLines = textLines.size() - 4;
         }
 
