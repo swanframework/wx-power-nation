@@ -1,5 +1,10 @@
 package org.zongf.wx.power.nation.util;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -41,6 +46,34 @@ public class FileUtils {
         try {
             return Files.readAllBytes(Paths.get(filePath));
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /** 获取图片字节流, 自动去除头部
+     * @param filePath  图片路径
+     * @return byte[]  图片的字节数组
+     * @since 1.0
+     * @author zongf
+     * @created 2019-10-30
+     */
+    public static byte[] getImageBytesWithoutHead(String filePath) {
+        int headHeight = 55;
+        try {
+            // 图片读取路径
+            // 1.得到图片的输入流
+            FileInputStream input = new FileInputStream(filePath);
+            // 2.用工具类ImageIO得到BufferedImage对象,将图片信息放入缓存区
+            BufferedImage image = ImageIO.read(input);
+
+            // 3.设置截图图片的(x坐标,y坐标,width宽,height高)信息,并返回截切的新图片,存入缓存区
+            BufferedImage result = image.getSubimage(0, headHeight, image.getWidth(), image.getHeight() - headHeight);
+
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ImageIO.write(result, "png", bos);
+
+            return bos.toByteArray();
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

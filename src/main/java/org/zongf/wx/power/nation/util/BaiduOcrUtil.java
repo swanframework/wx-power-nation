@@ -14,11 +14,9 @@ import org.zongf.wx.power.nation.config.BaiduAccoutConfig;
 import org.zongf.wx.power.nation.exception.OcrException;
 import org.zongf.wx.power.nation.vo.ocr.AccessTokenResponse;
 import org.zongf.wx.power.nation.vo.ocr.OcrResponse;
-import org.zongf.wx.power.nation.vo.ocr.TextArea;
 
 import java.net.URLEncoder;
 import java.util.Base64;
-import java.util.Iterator;
 
 /**
  * @author: zongf
@@ -76,12 +74,7 @@ public class BaiduOcrUtil {
      * @created 2019-10-25
      */
     public static OcrResponse doBasicOcr(byte[] bytes){
-        OcrResponse ocrResponse = doOcr(BaiduAccoutConfig.AK, BaiduAccoutConfig.SK, bytes, URL_BASIC_OCR);
-
-        // 处理第一行数据 , 第一行可能为时间
-        handleFirstLine(ocrResponse);
-
-        return ocrResponse;
+        return doOcr(BaiduAccoutConfig.AK, BaiduAccoutConfig.SK, bytes, URL_BASIC_OCR);
     }
 
     /** 提取图片中的文字, 包含文字位置信息
@@ -92,12 +85,7 @@ public class BaiduOcrUtil {
      * @created 2019-10-25
      */
     public static OcrResponse doBasicAccurateOcr(byte[] bytes) {
-        OcrResponse ocrResponse = doOcr(BaiduAccoutConfig.AK, BaiduAccoutConfig.SK, bytes, URL_LOCATION_BASIC_ACCURATE_OCR);
-
-        // 处理第一行数据 , 第一行可能为时间
-        handleFirstLine(ocrResponse);
-
-        return ocrResponse;
+        return doOcr(BaiduAccoutConfig.AK, BaiduAccoutConfig.SK, bytes, URL_LOCATION_BASIC_ACCURATE_OCR);
     }
 
     /** 图片进行ocr 文件转换
@@ -186,22 +174,6 @@ public class BaiduOcrUtil {
     private static String getBase64(byte[] bytes) {
         byte[] base64 = Base64.getEncoder().encode(bytes);
         return new String(base64);
-    }
-
-    /** 处理首行字符, 首行可能为时间行
-     * @param ocrResponse
-     * @since 1.0
-     * @author zongf
-     * @created 2019-10-29
-     */
-    private static void handleFirstLine(OcrResponse ocrResponse) {
-        if (ocrResponse != null && ocrResponse.getWords_result() != null && ocrResponse.getWords_result().size() > 0) {
-            String firstLine = ocrResponse.getWords_result().get(0).getWords();
-            if(firstLine.length() <10 ){
-                ocrResponse.getWords_result().remove(0);
-                ocrResponse.setWords_result_num(ocrResponse.getWords_result_num() -1);
-            }
-        }
     }
 
 }
