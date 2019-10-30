@@ -8,14 +8,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zongf.wx.power.nation.constant.ImageConstant;
-import org.zongf.wx.power.nation.factory.TodoImageFactory;
+import org.zongf.wx.power.nation.factory.ToParserImgInfoFactory;
 import org.zongf.wx.power.nation.mapper.ImageMapper;
 import org.zongf.wx.power.nation.po.ImagePO;
 import org.zongf.wx.power.nation.service.api.IImageService;
 import org.zongf.wx.power.nation.util.BaiduOcrUtil;
 import org.zongf.wx.power.nation.util.ThreadUtil;
 import org.zongf.wx.power.nation.vo.ImgLocOcrResult;
-import org.zongf.wx.power.nation.vo.TodoImageInfoVO;
+import org.zongf.wx.power.nation.vo.ToParserImgInfo;
 import org.zongf.wx.power.nation.vo.ocr.OcrResponse;
 
 /**
@@ -56,21 +56,24 @@ public class ImageService implements IImageService {
         return imagePO == null ? null : imagePO.getContent();
     }
 
-    private static int page = 1;
     @Override
-    public TodoImageInfoVO queryToDoImage(String type) {
-        // 使用分页查询, 查询1页信息
-        PageList<ImagePO> pager = this.imageMapper.queryByPager(new PageBounds(page++, 1), type, ImageConstant.STATUS_DONE_LOC_OCR);
+    public ToParserImgInfo queryToDoImage(String category) {
+
+        // 查询下一条数据
+        ImagePO imagePO = this.imageMapper.queryNext(category, ImageConstant.STATUS_DONE_ACCURATE_OCR);
 
         // 如果为空, 则返回null
-        if(pager.isEmpty()) return null;
+        if(imagePO == null) return null;
 
-        return TodoImageFactory.create(pager.get(0), pager.getPaginator().getTotalCount());
+        // 查询剩余数量
+        int leftNum = this.imageMapper.queryCount(category, ImageConstant.STATUS_DONE_ACCURATE_OCR);
+
+        return ToParserImgInfoFactory.create(imagePO, leftNum);
     }
 
     @Override
-    public boolean handleImage(Long id) {
-        return this.imageMapper.updateStatus(id, ImageConstant.STATUS_CONVERTED_QUESTION);
+    public boolean parsedToQuestion(Long id) {
+        return this.imageMapper.updateStatus(id, ImageConstant.STATUS_DONE_PARSED_ANSWER);
     }
 
     @Override
@@ -92,7 +95,7 @@ public class ImageService implements IImageService {
             try {
 
                 // 查询下一条待做精确ocr 的记录
-                imagePO = this.imageMapper.queryNextToDoAccurateOcr(category);
+                imagePO = this.imageMapper.queryNext(category, ImageConstant.STATUS_DONE_BASIC_OCR);
 
                 // 查询结果为空, 则表示已无记录
                 if (imagePO == null) break;

@@ -24,16 +24,10 @@ public class TodoImageInfoVO {
 
     private int todoNum;
 
+    private List<String> lineList;
+
 	public TodoImageInfoVO() {
         super();
-    }
-
-	public TodoImageInfoVO(Long id, String imageName, List<String> titleList, List<String> answerList) {
-        super();
-		this.id = id;
-		this.imageName = imageName;
-		this.titleList = titleList;
-		this.answerList = answerList;
     }
 
     public void setId(Long id){
@@ -74,6 +68,14 @@ public class TodoImageInfoVO {
 
 	public void setTodoNum(int todoNum) {
 		this.todoNum = todoNum;
+	}
+
+	public List<String> getLineList() {
+		return lineList;
+	}
+
+	public void setLineList(List<String> lineList) {
+		this.lineList = lineList;
 	}
 
 	public String toString() {

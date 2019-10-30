@@ -4,6 +4,7 @@ import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import org.apache.ibatis.annotations.Param;
 import org.zongf.wx.power.nation.po.ImagePO;
+import org.zongf.wx.power.nation.vo.ToParserImgInfo;
 import org.zongf.wx.power.nation.vo.TodoImageInfoVO;
 
 /**
@@ -26,10 +27,10 @@ public interface IImageService {
     byte[] queryContent(Long id);
 
     // 查询待处理的图片
-    TodoImageInfoVO queryToDoImage(String type);
+    ToParserImgInfo queryToDoImage(String type);
 
     // 更新状态
-    boolean handleImage(Long id);
+    boolean parsedToQuestion(Long id);
 
     // 分页查询
     PageList<ImagePO> queryByPager(PageBounds pageBounds, String category, String status);

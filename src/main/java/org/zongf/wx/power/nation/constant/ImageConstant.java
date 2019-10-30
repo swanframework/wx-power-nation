@@ -15,10 +15,10 @@ public class ImageConstant {
     public static final String STATUS_DONE_BASIC_OCR = "0";
 
     /** 处理状态: 已做高精ocr */
-    public static final String STATUS_DONE_LOC_OCR = "1";
+    public static final String STATUS_DONE_ACCURATE_OCR = "1";
 
     /** 处理状态: 已转换为题目 */
-    public static final String STATUS_CONVERTED_QUESTION = "2";
+    public static final String STATUS_DONE_PARSED_ANSWER = "2";
 
     /** 图片类型: 答题中 */
     public static final String TYPE_ANSWERING = "1";

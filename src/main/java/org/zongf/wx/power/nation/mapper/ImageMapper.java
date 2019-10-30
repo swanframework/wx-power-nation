@@ -4,7 +4,6 @@ import com.github.miemiedev.mybatis.paginator.domain.PageBounds;
 import com.github.miemiedev.mybatis.paginator.domain.PageList;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.zongf.wx.power.nation.po.ImagePO;
 
 /**
@@ -44,6 +43,9 @@ public interface ImageMapper {
     boolean updateAccurateOcr(@Param("id") Long id, @Param("accurateOcr") String locOcr);
 
     // 查询下一条待做精确OCR 的记录
-    ImagePO queryNextToDoAccurateOcr(String category);
+    ImagePO queryNext(String category, String status);
+
+    // 查询数量
+    int queryCount(String category, String status);
 
 }

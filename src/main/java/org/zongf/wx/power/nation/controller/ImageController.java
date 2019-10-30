@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.zongf.wx.power.nation.service.api.IImageService;
+import org.zongf.wx.power.nation.vo.ToParserImgInfo;
 import org.zongf.wx.power.nation.vo.TodoImageInfoVO;
 
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +33,7 @@ public class ImageController {
     // 查询下一个待解析的图片
     @ResponseBody
     @GetMapping("/nextAnswer")
-    public TodoImageInfoVO getNextAnswer(String category) {
+    public ToParserImgInfo getNextAnswer(String category) {
         return this.imageService.queryToDoImage(category);
     }
 

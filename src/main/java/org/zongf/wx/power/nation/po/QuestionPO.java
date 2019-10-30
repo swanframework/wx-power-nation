@@ -21,13 +21,14 @@ public class QuestionPO implements Serializable {
     // 题目
     private String title;
 
+    // 题目行数
+    private String titleLines;
+
     // 答案
     private String answer;
 
     // 答案索引号
     private int answerIdx;
-
-	private String answerLoc;
 
     // 新增时间
     @JSONField(format="yyyy.MM.dd")
@@ -77,14 +78,6 @@ public class QuestionPO implements Serializable {
 		this.answerIdx = answerIdx;
 	}
 
-	public String getAnswerLoc() {
-		return answerLoc;
-	}
-
-	public void setAnswerLoc(String answerLoc) {
-		this.answerLoc = answerLoc;
-	}
-
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -99,9 +92,9 @@ public class QuestionPO implements Serializable {
 				"id=" + id +
 				", imageId=" + imageId +
 				", title='" + title + '\'' +
+				", titleLines='" + titleLines + '\'' +
 				", answer='" + answer + '\'' +
 				", answerIdx=" + answerIdx +
-				", answerLoc='" + answerLoc + '\'' +
 				", createTime=" + createTime +
 				'}';
 	}

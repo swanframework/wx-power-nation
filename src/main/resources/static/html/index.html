@@ -39,6 +39,8 @@
             <button type="button" class="textbox" onclick="insert('，')">插入，</button>
             <button type="button" class="textbox" onclick="insert('。')">插入。</button>
             <button type="button" class="textbox" onclick="mergePre()">合并至上一行</button>
+            <button type="button" class="textbox" onclick="addTitleLines(1)">标题行+1</button>
+            <button type="button" class="textbox" onclick="addTitleLines(-1)">标题行-1</button>
             <button type="button" class="textbox" onclick="finish()" style="margin-top: 100px">完成</button>
         </div>
     </div>
@@ -50,6 +52,12 @@
     var imageId = 1;
     var titleLines = 1;
     var answerIdx = 1;
+    var imageInfo;
+
+    function addTitleLines(lines) {
+        imageInfo.titleLines += lines;
+        initImage(imageInfo);
+    }
 
     // 光标处插入文本
     function insert(str){
@@ -92,6 +100,27 @@
             }
         })
     }
+    
+    function initImage(result) {
+        // 保存id
+        imageId = result.imgId;
+
+        // 替换图片
+        $('#previewImg').attr('src', "/image/content/" + imageId);
+
+        // 初始化标题
+        $('#title').empty();
+        for (i = 0; i < result.titleLines; i++) {
+            $('#title').append("<li><input id='" + i +"' type='text' value='" + result.textLines[i] + "' onfocus='fc(this)' ></li>")
+        }
+
+
+        // 初始化答案
+        $('#answer').empty();
+        for (i = result.titleLines; i < result.textLines.length; i++) {
+            $('#answer').append("<li onclick='selectAnswer(this)' idx='" + i + "'><label>" + result.textLines[i] + "</label></li>")
+        }
+    }
 
     // 加载图片
     function loadImage(){
@@ -99,23 +128,8 @@
             url:"/image/nextAnswer?category=1",
             method:"GET",
             success: function(result) {
-                // 保存id
-                imageId = result.id;
-
-                // 替换图片
-                $('#previewImg').attr('src', "/image/content/" + imageId);
-
-                // 初始化标题
-                $('#title').empty();
-                result.titleList.forEach(function (val, idx) {
-                    $('#title').append("<li><input id='" + idx +"' type='text' value='" + val + "' onfocus='fc(this)' ></li>")
-                });
-
-                // 初始化答案
-                $('#answer').empty();
-                result.answerList.forEach(function (val, idx) {
-                    $('#answer').append("<li onclick='selectAnswer(this)' idx='" + idx + "'><label>" + val + "</label></li>")
-                });
+                imageInfo = result;
+                initImage(result);
             }
         })
     }

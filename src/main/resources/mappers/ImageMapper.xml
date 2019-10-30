@@ -65,10 +65,17 @@
         where category = #{category} and basicOcr = #{basicOcr}
     </select>
 
-    <select id="queryNextToDoAccurateOcr" resultType="org.zongf.wx.power.nation.po.ImagePO">
+    <select id="queryNext" resultType="org.zongf.wx.power.nation.po.ImagePO">
         select <include refid="columns_all" />
         from s_image
-        where category = #{category} and status = '0' limit 1
+        where category = #{category} and status = #{status}
+        order by id
+        limit 1
+    </select>
+    <select id="queryCount" resultType="java.lang.Integer">
+        select count(id)
+        from s_image
+        where category = #{category} and status = #{status}
     </select>
 
     <!-- 清空表中数据, 同时重置自增序列从0开始 -->
