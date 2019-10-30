@@ -29,4 +29,9 @@ public interface QuestionMapper {
 
     List<QuestionPO> queryAll();
 
+    // 查询最新的num条数据
+    List<QuestionPO> queryLatest(int num);
+
+    // 查询下一个预览数据
+    QuestionPO queryNextPreview(int id);
 }

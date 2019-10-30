@@ -43,4 +43,9 @@ public class QuestionController {
         this.imageService.parsedToQuestion(questionPO.getImageId());
 
     }
+
+    @GetMapping("/nextPreview")
+    public QuestionPO queryNextPreview(int id) {
+        return this.questionMapper.queryNextPreview(id);
+    }
 }

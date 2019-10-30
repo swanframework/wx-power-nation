@@ -38,5 +38,18 @@
         select <include refid="columns_all" />
         from s_question
     </select>
+    <select id="queryLatest" resultType="org.zongf.wx.power.nation.po.QuestionPO">
+        select <include refid="columns_all" />
+        from s_question
+        order by createTime
+        limit #{num}
+    </select>
+    <select id="queryNextPreview" resultType="org.zongf.wx.power.nation.po.QuestionPO">
+        select <include refid="columns_all" />
+        from s_question
+        where id > #{id}
+        order by createTime
+        limit 1
+    </select>
 
 </mapper>

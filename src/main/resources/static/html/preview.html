@@ -34,12 +34,15 @@
         </div>
         <!-- 按钮区 -->
         <div id="btns">
-            <button type="button" class="textbox" onclick="insert('###，')">插入###，</button>
-            <button type="button" class="textbox" onclick="insert('###。')">插入###。</button>
+            <button type="button" class="textbox" onclick="insert('___')">插入___</button>
+            <button type="button" class="textbox" onclick="insert('（ ）')">插入（ ）</button>
             <button type="button" class="textbox" onclick="insert('，')">插入，</button>
             <button type="button" class="textbox" onclick="insert('。')">插入。</button>
-            <button type="button" class="textbox" onclick="mergePre()">合并至上一行</button>
-            <button type="button" class="textbox" onclick="finish()" style="margin-top: 100px">完成</button>
+            <button type="button" class="textbox" onclick="titleMergePre()">标题合并至上一行</button>
+            <button type="button" class="textbox" onclick="answerMergePre()">选项合并至上一行</button>
+            <button type="button" class="textbox" onclick="addTitleLines(1)">标题行+1</button>
+            <button type="button" class="textbox" onclick="addTitleLines(-1)">标题行-1</button>
+            <button type="button" class="textbox" onclick="finish()" >完成</button>
         </div>
     </div>
 
@@ -49,32 +52,66 @@
     var answer = "";
     var imageId = 1;
     var titleLines = 1;
-    var answerIdx = 1;
+    var answerIdx = 0;
+    var imageInfo;
+
+
+
+    function addTitleLines(lines) {
+        imageInfo.titleLines += lines;
+        initImage(imageInfo);
+    }
 
     // 光标处插入文本
     function insert(str){
         $("#" + focusId).insertAtCaret(str);
     }
 
-    function mergePre(){
+    function titleMergePre(){
         var title = $("#" + focusId).val();
         var prevId = focusId -1;
         var preTitle = $("#" + prevId).val();
-        $("#" + prevId).val(preTitle);
+        $("#" + prevId).val(preTitle + title);
         $("#" + focusId).remove();
         titleLines = titleLines -1;
     }
 
+    function answerMergePre(){
+        if(answerIdx == 0){
+            alert("请选择答案");
+        }
+        var prevId = answerIdx -1;
+        var preAnswer = $("#answer " + "#" + prevId).children("label").html();
+        var answer = $("#answer " + "#" + answerIdx).children("label").html();
+        $("#answer " + "#" + answerIdx).remove();
+        $("#answer " + "#" + prevId).children("label").html(preAnswer + answer);
+        $("#answer " + "#" + prevId).css("height", "68px").css("line-height","22px").css("padding-top","12px");
+
+        // 重置
+        answerIdx = 0;
+    }
+
     // 完成选择
     function finish(){
-        loadImage();
-        return;
-
+        var titleLines = 0;
         var title = "";
         // 获取标题
         $("#title li input").each(function () {
             title += $(this).val().trim();
+            titleLines++;
         });
+
+        var idx = 0;
+        var options = "[";
+        $("#answer li").each(function () {
+            idx++;
+            if (answerIdx == $(this).attr("id")) {
+                answerIdx = idx;
+                answer = $(this).children("label").html();
+            }
+            options += '"' + $(this).children("label").html() + '", ';
+        });
+        options +="]";
 
         // 如果未选择答案,则抛出提示
         if(answer == ""){
@@ -82,42 +119,49 @@
             return;
         }
 
-        var params = "&title=" + title + "&answer=" + answer + "&imageId=" + imageId
-                + "&titleLines=" + titleLines + "&answerIdx=" + answerIdx;
+        var params = "title=" + title + "&answer=" + answer + "&imageId=" + imageId
+                + "&titleLines=" + titleLines + "&answerIdx=" + answerIdx + "&options=" + options;
 
         $.ajax({
             url:"/question",
             method:"POST",
             data: params ,
             success: function(result) {
-                // alert(result);
-                loadImage();
+                window.location.reload();
             }
         })
     }
+    
+    function initImage(result) {
+        // 保存id
+        imageId = result.imgId;
 
+        // 替换图片
+        $('#previewImg').attr('src', "/image/content/" + imageId);
+
+        // 初始化标题
+        $('#title').empty();
+        for (i = 0; i < result.titleLines; i++) {
+            $('#title').append("<li><input id='" + i +"' type='text' value='" + result.textLines[i] + "' onfocus='fc(this)' ></li>")
+        }
+
+
+        // 初始化答案
+        $('#answer').empty();
+        for (i = result.titleLines; i < result.textLines.length; i++) {
+            var idx = (i-result.titleLines);
+            $('#answer').append("<li id='" + idx +"' idx='" + idx + "' onclick='selectAnswer(this)' ><label singleLine='false'>" + result.textLines[i] + "</label></li>")
+        }
+    }
+
+    // 加载图片
     function loadImage(){
         $.ajax({
-            url:"/image/todo?type=1",
+            url:"/image/nextAnswer?category=1",
             method:"GET",
             success: function(result) {
-                // 保存id
-                imageId = result.id;
-
-                // 替换图片
-                $('#previewImg').attr('src', "/image/content/" + imageId);
-
-                // 初始化标题
-                $('#title').empty();
-                result.titleList.forEach(function (val, idx) {
-                    $('#title').append("<li><input id='" + idx +"' type='text' value='" + val + "' onfocus='fc(this)' ></li>")
-                });
-
-                // 初始化答案
-                $('#answer').empty();
-                result.answerList.forEach(function (val, idx) {
-                    $('#answer').append("<li onclick='selectAnswer(this)' idx='" + idx + "'><label>" + val + "</label></li>")
-                });
+                imageInfo = result;
+                initImage(result);
             }
         })
     }
@@ -126,10 +170,10 @@
     function selectAnswer(v){
         $("#answer li").each(function () {
             $(this).css("background-color","#FFF");
-
         });
         // 获取选中对象的文本
         answer = $($(v).children("label").get(0)).text();
+        answerIdx = $(v).attr("idx");
         // 更改颜色
         $(v).css("background-color","#3DC074");
     }
@@ -145,7 +189,10 @@
         });
     });
 
-    setInterval(loadImage, 1000);
+    // 初始化加载
+    loadImage();
+
+    // setInterval(loadImage, 200);
 
 </script>
 </html>
