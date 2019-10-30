@@ -6,13 +6,13 @@
 
     <!-- 定义所有字段 -->
     <sql id="columns_all">
-        id, imageId, title, titleLines, answer, answerIdx, createTime
+        id, imageId, title, titleLines, answer, answerIdx, options, createTime
     </sql>
 
     <!-- 新增 -->
     <insert id="save" useGeneratedKeys="true" keyProperty="id">
         insert into s_question(<include refid="columns_all" />)
-        values (null, #{imageId}, #{title}, #{titleLines}, #{answer}, #{answerIdx},  #{createTime})
+        values (null, #{imageId}, #{title}, #{titleLines}, #{answer}, #{answerIdx}, #{options}, #{createTime})
     </insert>
 
     <!-- 删除 -->

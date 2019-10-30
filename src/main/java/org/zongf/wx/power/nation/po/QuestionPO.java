@@ -22,7 +22,7 @@ public class QuestionPO implements Serializable {
     private String title;
 
     // 题目行数
-    private String titleLines;
+    private int titleLines;
 
     // 答案
     private String answer;
@@ -33,6 +33,9 @@ public class QuestionPO implements Serializable {
     // 新增时间
     @JSONField(format="yyyy.MM.dd")
     private Date createTime;
+
+    // 选项, json数组
+    private String options;
 
 	public QuestionPO() {
         super();
@@ -84,6 +87,22 @@ public class QuestionPO implements Serializable {
 
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
+	}
+
+	public int getTitleLines() {
+		return titleLines;
+	}
+
+	public void setTitleLines(int titleLines) {
+		this.titleLines = titleLines;
+	}
+
+	public String getOptions() {
+		return options;
+	}
+
+	public void setOptions(String options) {
+		this.options = options;
 	}
 
 	@Override
