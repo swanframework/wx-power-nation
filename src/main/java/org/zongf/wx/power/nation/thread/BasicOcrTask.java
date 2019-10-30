@@ -16,7 +16,7 @@ import java.util.concurrent.*;
  */
 public class BasicOcrTask {
 
-    static Logger log = (Logger) LoggerFactory.getLogger(BasicOcrTask.class);
+    static Logger log =  LoggerFactory.getLogger(BasicOcrTask.class);
 
     private static final int THREAD_NUM = 10;
 

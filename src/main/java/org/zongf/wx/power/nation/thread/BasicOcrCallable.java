@@ -51,7 +51,7 @@ public class BasicOcrCallable implements Callable<ImgBasicOcrResult> {
 
             try {
                 importResult.addTotalNum(1);
-                byte[] content = FileUtils.getFileBytes(imgFilePath);
+                byte[] content = FileUtils.getImageBytesWithoutHead(imgFilePath);
 
                 // 进行百度ocr 解析
                 OcrResponse ocrResponse = BaiduOcrUtil.doBasicOcr(content);
