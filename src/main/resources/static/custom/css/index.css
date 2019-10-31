@@ -93,15 +93,17 @@
 }
 
 #answer li{ /* 答题选项*/
-    height: 46px;
-    line-height: 46px;
-    border: 1px solid #3d3d3d;
+    min-height: 46px;
+    line-height: 22px;
+    border: 1px solid #EEEEF4;
     border-radius: 30px;
     margin-top: 10px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 400;
     text-align: left;
     padding-left: 20px;
+    padding: 11px 15px 11px 15px;
+    background-color: #FBFBFB;
 }
 
 

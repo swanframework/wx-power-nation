@@ -2,19 +2,18 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Full Layout - jQuery EasyUI Demo</title>
+    <title>题目预览</title>
     <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.7.0/themes/default/easyui.css">
     <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.7.0/themes/icon.css">
     <script type="text/javascript" src="../jquery-easyui-1.7.0/jquery.min.js"></script>
     <script type="text/javascript" src="../jquery-easyui-1.7.0/jquery.easyui.min.js"></script>
     <!-- 自定义脚本和文件 -->
     <link rel="stylesheet" type="text/css" href="../custom/css/index.css">
-    <script type="text/javascript" src="../custom/js/insertAtCaret.js"></script>
 </head>
 <body class="easyui-layout" style="width: 100%">
 
     <!-- 左侧: 图片预览区 -->
-    <div id="left" data-options="region:'west',collapsible:false, title:'图片预览'">
+    <div id="left" data-options="region:'west',collapsible:false, title:'原图'">
         <!-- 900x1600  -->
         <img id="previewImg"><br/>
     </div>
@@ -25,172 +24,73 @@
             <!-- 截屏边框 -->
             <div id="border">
                 <div id="signle"></div> <!-- 头部信号区域 -->
-
                 <div id="question"> <!-- 题目背景 -->
-                    <ul id="title"></ul>
+                    <div id="title" style="font-size: 15px; text-align: left; padding-left: 15px; padding-right: 15px"></div>
                     <ul id="answer"></ul>
                 </div>
             </div>
         </div>
         <!-- 按钮区 -->
         <div id="btns">
-            <button type="button" class="textbox" onclick="insert('___')">插入___</button>
-            <button type="button" class="textbox" onclick="insert('（ ）')">插入（ ）</button>
-            <button type="button" class="textbox" onclick="insert('，')">插入，</button>
-            <button type="button" class="textbox" onclick="insert('。')">插入。</button>
-            <button type="button" class="textbox" onclick="titleMergePre()">标题合并至上一行</button>
-            <button type="button" class="textbox" onclick="answerMergePre()">选项合并至上一行</button>
-            <button type="button" class="textbox" onclick="addTitleLines(1)">标题行+1</button>
-            <button type="button" class="textbox" onclick="addTitleLines(-1)">标题行-1</button>
-            <button type="button" class="textbox" onclick="finish()" >完成</button>
+            <button type="button" class="textbox" onclick="pre()">上一题</button>
+            <button type="button" class="textbox" onclick="next()">下一题</button>
         </div>
     </div>
 
 </body>
 <script type="text/javascript">
-    var focusId = "";
-    var answer = "";
-    var imageId = 1;
-    var titleLines = 1;
-    var answerIdx = 0;
-    var imageInfo;
+    // 当前页和总页数
+    var currentPage = 39;
+    var totalPages =1;
 
-
-
-    function addTitleLines(lines) {
-        imageInfo.titleLines += lines;
-        initImage(imageInfo);
+    // 上一题
+    function pre() {
+        loadImage(currentPage -1)
     }
 
-    // 光标处插入文本
-    function insert(str){
-        $("#" + focusId).insertAtCaret(str);
+    // 下一题
+    function next() {
+        loadImage(currentPage +1)
     }
 
-    function titleMergePre(){
-        var title = $("#" + focusId).val();
-        var prevId = focusId -1;
-        var preTitle = $("#" + prevId).val();
-        $("#" + prevId).val(preTitle + title);
-        $("#" + focusId).remove();
-        titleLines = titleLines -1;
-    }
-
-    function answerMergePre(){
-        if(answerIdx == 0){
-            alert("请选择答案");
-        }
-        var prevId = answerIdx -1;
-        var preAnswer = $("#answer " + "#" + prevId).children("label").html();
-        var answer = $("#answer " + "#" + answerIdx).children("label").html();
-        $("#answer " + "#" + answerIdx).remove();
-        $("#answer " + "#" + prevId).children("label").html(preAnswer + answer);
-        $("#answer " + "#" + prevId).css("height", "68px").css("line-height","22px").css("padding-top","12px");
-
-        // 重置
-        answerIdx = 0;
-    }
-
-    // 完成选择
-    function finish(){
-        var titleLines = 0;
-        var title = "";
-        // 获取标题
-        $("#title li input").each(function () {
-            title += $(this).val().trim();
-            titleLines++;
-        });
-
-        var idx = 0;
-        var options = "[";
-        $("#answer li").each(function () {
-            idx++;
-            if (answerIdx == $(this).attr("id")) {
-                answerIdx = idx;
-                answer = $(this).children("label").html();
-            }
-            options += '"' + $(this).children("label").html() + '", ';
-        });
-        options +="]";
-
-        // 如果未选择答案,则抛出提示
-        if(answer == ""){
-            alert("请选择答案");
-            return;
-        }
-
-        var params = "title=" + title + "&answer=" + answer + "&imageId=" + imageId
-                + "&titleLines=" + titleLines + "&answerIdx=" + answerIdx + "&options=" + options;
-
-        $.ajax({
-            url:"/question",
-            method:"POST",
-            data: params ,
-            success: function(result) {
-                window.location.reload();
-            }
-        })
-    }
-    
     function initImage(result) {
-        // 保存id
-        imageId = result.imgId;
+
+        // 更新当前页和总页数
+        currentPage = result.page;
+        totalPages = result.totalPage;
 
         // 替换图片
-        $('#previewImg').attr('src', "/image/content/" + imageId);
+        $('#previewImg').attr('src', "/image/content/" + result.imageId);
 
         // 初始化标题
-        $('#title').empty();
-        for (i = 0; i < result.titleLines; i++) {
-            $('#title').append("<li><input id='" + i +"' type='text' value='" + result.textLines[i] + "' onfocus='fc(this)' ></li>")
-        }
-
+        $('#title').text(result.title);
 
         // 初始化答案
         $('#answer').empty();
-        for (i = result.titleLines; i < result.textLines.length; i++) {
-            var idx = (i-result.titleLines);
-            $('#answer').append("<li id='" + idx +"' idx='" + idx + "' onclick='selectAnswer(this)' ><label singleLine='false'>" + result.textLines[i] + "</label></li>")
-        }
+
+        result.options.forEach(function (option, idx){
+            if(result.answerIdx == idx+1){
+                $('#answer').append("<li style='background-color:#3DC074; color: #FFF '><label singleLine='false'>" + option + "</label></li>")
+            }else {
+                $('#answer').append("<li><label singleLine='false'>" + option + "</label></li>")
+            }
+        })
     }
 
     // 加载图片
-    function loadImage(){
+    function loadImage(page){
         $.ajax({
-            url:"/image/nextAnswer?category=1",
+            url:"/question/nextPreview?page=" + page,
             method:"GET",
+            dataType: 'json',
             success: function(result) {
-                imageInfo = result;
                 initImage(result);
             }
         })
     }
 
-    // 选择答案, 变更颜色
-    function selectAnswer(v){
-        $("#answer li").each(function () {
-            $(this).css("background-color","#FFF");
-        });
-        // 获取选中对象的文本
-        answer = $($(v).children("label").get(0)).text();
-        answerIdx = $(v).attr("idx");
-        // 更改颜色
-        $(v).css("background-color","#3DC074");
-    }
-
-    function fc(v){
-        focusId = $(v).attr("id");
-    }
-
-    $(function () {
-        $("input").focus(function () {
-            focusId = $(this).attr("id");
-            answerIdx = $(this).attr("idx");
-        });
-    });
-
     // 初始化加载
-    loadImage();
+    loadImage(currentPage);
 
     // setInterval(loadImage, 200);
 
