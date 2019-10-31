@@ -38,6 +38,10 @@ public class QuestionController {
     // 更新
     @PostMapping
     public void save(QuestionPO questionPO) {
+        // 处理特殊符号, %号不能传输
+        questionPO.setOptions(questionPO.getOptions().replaceAll("###","%"));
+        questionPO.setAnswer(questionPO.getAnswer().replaceAll("###","%"));
+        questionPO.setTitle(questionPO.getTitle().replaceAll("###","%"));
 
         // 设置时间
         questionPO.setCreateTime(new Date());

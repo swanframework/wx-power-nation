@@ -85,13 +85,13 @@
 }
 
 /* 题目答案区 */
-#question #answer{
+#question #option{
     list-style: none;
     padding: 10px;
     margin-top: 20px;
 }
 
-#answer li{ /* 答题选项*/
+#option li{ /* 答题选项*/
     min-height: 46px;
     line-height: 22px;
     border: 1px solid #EEEEF4;
