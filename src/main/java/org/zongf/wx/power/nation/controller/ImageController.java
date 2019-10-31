@@ -38,6 +38,7 @@ public class ImageController {
     }
 
     // 删除图片
+    @ResponseBody
     @DeleteMapping("/{id}")
     public boolean getImage(@PathVariable long id) throws Exception {
         return this.imageService.delete(id);

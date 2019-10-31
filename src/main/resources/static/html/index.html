@@ -37,8 +37,9 @@
         <div id="btns">
             <p>
                 <button type="button" class="textbox" onclick="insert('___')">___</button>
-                <button type="button" class="textbox" onclick="insert('___，')">___，</button>
                 <button type="button" class="textbox" onclick="insert('___。')">___。</button>
+                <button type="button" class="textbox" onclick="insert('___，')">___，</button>
+                <button type="button" class="textbox" onclick="insert('、')">、</button>
                 <button type="button" class="textbox" onclick="insert('（ ）')">（ ）</button>
             </p>
             <p>
@@ -48,12 +49,14 @@
             </p>
             <p>
                 <button type="button" class="textbox" onclick="optionMergePre()">选项向上合并</button>
-                <button type="button" class="textbox" onclick="addOption()">添加选项</button>
-                <button type="button" class="textbox" onclick="addSortOption()">添加排序选项</button>
-                <button type="button" class="textbox" onclick="optionMoveUp()">选项上移</button>
+                <button type="button" class="textbox" onclick="addOption()">添加</button>
+                <button type="button" class="textbox" onclick="addSortOption()">顺序</button>
+                <button type="button" class="textbox" onclick="optionMoveUp()">上移</button>
+                <button type="button" class="textbox" onclick="removeOption()">删除选项</button>
             </p>
             <p>
                 <button type="button" class="textbox" onclick="finish()" >完成</button>
+                <button type="button" class="textbox" onclick="remove()" >删除图片</button>
             </p>
         </div>
     </div>
@@ -122,6 +125,14 @@
                 $('#option').append("<li class='option_bg' id='" + idx + "' onclick='selectAnswer(this)' ><label singleLine='false'>" + option + "</label></li>")
             }
         });
+    }
+
+    // 删除选项
+    function removeOption() {
+        // 删除选中项
+        $(".answer_bg").remove();
+        // 重置索引序号
+        resetOptionIdx();
     }
 
     // 追加排序选项
@@ -304,6 +315,17 @@
 
     // 初始化加载
     loadImage();
+
+    // 删除图片
+    function remove() {
+        $.ajax({
+            url:"/image/" + imageInfo.imgId,
+            method:"DELETE",
+            success: function() {
+                window.location.reload();
+            }
+        })
+    }
 
     // setInterval(loadImage, 200);
 
