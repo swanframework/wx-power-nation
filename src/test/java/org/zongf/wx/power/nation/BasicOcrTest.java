@@ -58,7 +58,7 @@ public class BasicOcrTest {
 
     @Test
     public void test(){
-        byte[] bytes = this.imageService.queryContent((long) 58);
+        byte[] bytes = this.imageService.queryContent((long) 92);
         OcrResponse ocrResponse = BaiduOcrUtil.doBasicAccurateOcr(bytes);
     }
 

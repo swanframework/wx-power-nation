@@ -42,12 +42,12 @@
                 <button type="button" class="textbox" onclick="insert('（ ）')">（ ）</button>
             </p>
             <p>
-                <button type="button" class="textbox" onclick="addTitleLines(1)">标题行+1</button>
-                <button type="button" class="textbox" onclick="addTitleLines(-1)">标题行-1</button>
+                <button type="button" class="textbox" onclick="chgTitleLines(1)">标题行+1</button>
+                <button type="button" class="textbox" onclick="chgTitleLines(-1)">标题行-1</button>
                 <button type="button" class="textbox" onclick="titleMergePre()">标题向上合并</button>
             </p>
             <p>
-                <button type="button" class="textbox" onclick="answerMergePre()">选项向上合并</button>
+                <button type="button" class="textbox" onclick="optionMergePre()">选项向上合并</button>
                 <button type="button" class="textbox" onclick="addOption()">添加选项</button>
                 <button type="button" class="textbox" onclick="optionMoveUp()">选项上移</button>
             </p>
@@ -59,19 +59,43 @@
 
 </body>
 <script type="text/javascript">
-    var focusId = "";
-    var imageId = 1;
-    var titleLines = 1;
+    var titleFocusId = "";
     var imageInfo;
 
-    function addTitleLines(lines) {
+    // 变更标题行数
+    function chgTitleLines(lines) {
         imageInfo.titleLines += lines;
         initImage(imageInfo);
     }
 
+    // 标题行向上 合并
+    function titleMergePre(){
+        // 获取上一行id
+        var prevId = titleFocusId -1;
+        // 获取当前行值(光标所在行)
+        var title = $("#" + titleFocusId).val();
+        // 获取上一行内容
+        var preTitle = $("#" + prevId).val();
+        // 设置上一行内容
+        $("#" + prevId).val(preTitle + title);
+        // 删除当前行
+        $("#" + titleFocusId).remove();
+    }
+
     // 光标处插入文本
     function insert(str){
-        $("#" + focusId).insertAtCaret(str);
+        $("#" + titleFocusId).insertAtCaret(str);
+    }
+
+    // 标题行获取焦点
+    function titleLineFocus(ele){
+        titleFocusId = $(ele).attr("id");
+
+        $("#title li input").each(function () {
+            $(this).removeClass("title_focus").addClass("border_none")
+        });
+        // 更改颜色
+        $(ele).removeClass("border_none").addClass("title_focus");
     }
 
     // 追加选项
@@ -84,40 +108,68 @@
         });
     }
 
-    function titleMergePre(){
-        var title = $("#" + focusId).val();
-        var prevId = focusId -1;
-        var preTitle = $("#" + prevId).val();
-        $("#" + prevId).val(preTitle + title);
-        $("#" + focusId).remove();
-        titleLines = titleLines -1;
+    // 选项向上移动
+    function optionMoveUp() {
+        // 获取选项索引
+        var optionIdx = $(".answer_bg").attr("id");
+
+        // 弹出提示
+        if(optionIdx == undefined){
+            $.messager.alert('选择选项','请点击需要向上合并的选项!','info');
+            return;
+        }else if (optionIdx == 0) {
+            return;
+        }
+
+        // 上一个元素索引
+        var preOptionIdx = optionIdx -1;
+
+        // 元素交换位置
+        $("#answer #" + optionIdx).insertBefore($("#answer #" + preOptionIdx));
+        // 交换索引值
+        $("#answer #" + optionIdx).attr("id", "optionTmp");
+        $("#answer #" + preOptionIdx).attr("id", optionIdx);
+        $("#answer #optionTmp").attr("id", preOptionIdx);
     }
 
-    function answerMergePre(){
+
+    // 选项向上合并
+    function optionMergePre(){
+        // 获取选项索引
         var optionIdx = $(".answer_bg").attr("id");
-        if(optionIdx == 0){
-            alert("请选择答案");
+
+        // 弹出提示
+        if(optionIdx == undefined){
+            $.messager.alert('选择选项','请点击需要向上合并的选项!','info');
+            return;
         }
+
+        // 获取上一个选项的id
         var prevId = optionIdx -1;
-        var preAnswer = $("#answer " + "#" + prevId).children("label").html();
-        var answer = $("#answer " + "#" + optionIdx).children("label").html();
+        // 获取上一个选项的内容
+        var preOption = $("#answer " + "#" + prevId).children("label").html();
+        // 获取当前选项的内容
+        var option = $("#answer " + "#" + optionIdx).children("label").html();
+        // 设置上一选项值
+        $("#answer " + "#" + prevId).children("label").html(preOption + option);
+        // 删除当前选项
         $("#answer " + "#" + optionIdx).remove();
-        $("#answer " + "#" + prevId).children("label").html(preAnswer + answer);
-        // 重置
-        answerIdx = 0;
     }
 
     // 完成选择
     function finish(){
-        var titleLines = 0;
+        // 标题行数
+        var titleLines =  $("#title li input").length;
+
+        // 拼接标题
         var title = "";
-        var answerIdx = 0;
-        // 获取标题
         $("#title li input").each(function () {
             title += $(this).val().trim();
-            titleLines++;
         });
 
+        // 获取选项列表, 答案, 索引
+        var answerIdx = 0;
+        var answer = "";
         var options = "[";
         $("#answer li").each(function (i, n) {
             var option = $(this).children("label").text();
@@ -129,19 +181,17 @@
         });
         options +="]";
 
+        // 如果未选择答案, 则拼接答案内容
         if (answerIdx == 0) {
-            alert("请选择答案");
+            $.messager.alert('参数错误','请选择正确答案!','error');
             return;
         }
 
-        // 如果未选择答案,则抛出提示
-        if(answer == ""){
-            alert("请选择答案");
-            return;
-        }
-
-        var params = "title=" + title + "&answer=" + answer + "&imageId=" + imageId
+        // 拼接请求串儿
+        var params = "title=" + title + "&answer=" + answer + "&imageId=" + imageInfo.imgId
                 + "&titleLines=" + titleLines + "&answerIdx=" + answerIdx + "&options=" + options;
+
+        // 发送网络请求
         $.ajax({
             url:"/question",
             method:"POST",
@@ -162,16 +212,17 @@
         // 初始化标题
         $('#title').empty();
         for (i = 0; i < result.titleLines; i++) {
-            $('#title').append("<li><input id='" + i +"' type='text' value='" + result.textLines[i] + "' onfocus='fc(this)' ></li>")
+            $('#title').append("<li><input class='border_none' id='" + i +"' type='text' value='" + result.textLines[i] + "' onfocus='titleLineFocus(this)' ></li>")
         }
 
         // 初始化答案
         $('#answer').empty();
         for (i = result.titleLines; i < result.textLines.length; i++) {
             var idx = (i-result.titleLines);
-            $('#answer').append("<li class='option_bg' id='" + idx +"' idx='" + idx + "' onclick='selectAnswer(this)' ><label singleLine='false'>" + result.textLines[i] + "</label></li>")
+            $('#answer').append("<li class='option_bg' id='" + idx + "' onclick='selectAnswer(this)' ><label singleLine='false'>" + result.textLines[i] + "</label></li>")
         }
 
+        // 设置剩余待处理数
         $('#lt').text(result.leftNum)
     }
 
@@ -196,16 +247,6 @@
         $(v).removeClass("option_bg").addClass("answer_bg");
     }
 
-    function fc(v){
-        focusId = $(v).attr("id");
-    }
-
-    $(function () {
-        $("input").focus(function () {
-            focusId = $(this).attr("id");
-            answerIdx = $(this).attr("idx");
-        });
-    });
 
     // 初始化加载
     loadImage();

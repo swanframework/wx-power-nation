@@ -81,7 +81,6 @@
 #question #title li input{
     width: 310px;
     font-size: 15px;
-    border: none;
     margin-top: 2px;
 }
 
@@ -114,9 +113,13 @@
     background-color: #FBFBFB;
 }
 
+.title_focus{
+    border: solid 1px #00D4E5;
+}
 
-
-
+.border_none{
+    border: none;
+}
 
 
 
