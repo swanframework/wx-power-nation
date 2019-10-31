@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Full Layout - jQuery EasyUI Demo</title>
+    <title>挑战答题-题目解析</title>
     <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.7.0/themes/default/easyui.css">
     <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.7.0/themes/icon.css">
     <script type="text/javascript" src="../jquery-easyui-1.7.0/jquery.min.js"></script>
@@ -49,13 +49,9 @@
 </body>
 <script type="text/javascript">
     var focusId = "";
-    var answer = "";
     var imageId = 1;
     var titleLines = 1;
-    var answerIdx = 0;
     var imageInfo;
-
-
 
     function addTitleLines(lines) {
         imageInfo.titleLines += lines;
@@ -101,15 +97,14 @@
             titleLines++;
         });
 
-        var idx = 0;
         var options = "[";
-        $("#answer li").each(function () {
-            idx++;
-            if (answerIdx == $(this).attr("id")) {
-                answerIdx = idx;
-                answer = $(this).children("label").html();
+        $("#answer li").each(function (i, n) {
+            var option = $(this).children("label").text();
+            if($(this).hasClass("answer_bg")){
+                answerIdx = i + 1;
+                answer = option;
             }
-            options += '"' + $(this).children("label").html() + '", ';
+            options += '"' + option + '", ';
         });
         options +="]";
 
@@ -121,7 +116,6 @@
 
         var params = "title=" + title + "&answer=" + answer + "&imageId=" + imageId
                 + "&titleLines=" + titleLines + "&answerIdx=" + answerIdx + "&options=" + options;
-
         $.ajax({
             url:"/question",
             method:"POST",
@@ -150,7 +144,7 @@
         $('#answer').empty();
         for (i = result.titleLines; i < result.textLines.length; i++) {
             var idx = (i-result.titleLines);
-            $('#answer').append("<li id='" + idx +"' idx='" + idx + "' onclick='selectAnswer(this)' ><label singleLine='false'>" + result.textLines[i] + "</label></li>")
+            $('#answer').append("<li class='option_bg' id='" + idx +"' idx='" + idx + "' onclick='selectAnswer(this)' ><label singleLine='false'>" + result.textLines[i] + "</label></li>")
         }
     }
 
@@ -169,13 +163,10 @@
     // 选择答案, 变更颜色
     function selectAnswer(v){
         $("#answer li").each(function () {
-            $(this).css("background-color","#FFF");
+            $(this).removeClass("answer_bg").addClass("option_bg");
         });
-        // 获取选中对象的文本
-        answer = $($(v).children("label").get(0)).text();
-        answerIdx = $(v).attr("idx");
         // 更改颜色
-        $(v).css("background-color","#3DC074");
+        $(v).removeClass("option_bg").addClass("answer_bg");
     }
 
     function fc(v){
