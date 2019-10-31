@@ -59,7 +59,6 @@
 
 </body>
 <script type="text/javascript">
-    var titleFocusId = "";
     var imageInfo;
 
     // 变更标题行数
@@ -70,27 +69,45 @@
 
     // 标题行向上 合并
     function titleMergePre(){
+        // 获取标题索引
+        var titleIdx = $(".title_focus").attr("id");
+
+        // 弹出提示
+        if(titleIdx == undefined){
+            $.messager.alert('选择选项','请点击需要向上合并的选项!','info');
+            return;
+        }else if (titleIdx == 0) {
+            return;
+        }
+
         // 获取上一行id
-        var prevId = titleFocusId -1;
+        var prevId = titleIdx -1;
         // 获取当前行值(光标所在行)
-        var title = $("#" + titleFocusId).val();
+        var title = $("#title " + "#" + titleIdx).val();
         // 获取上一行内容
-        var preTitle = $("#" + prevId).val();
+        var preTitle = $("#title " + "#" + prevId).val();
         // 设置上一行内容
-        $("#" + prevId).val(preTitle + title);
+        $("#title " + "#" + prevId).val(preTitle + title);
         // 删除当前行
-        $("#" + titleFocusId).remove();
+        $("#title " + "#" + titleIdx).parent("li").remove();
+        // 选择行索引-1
+        $("#title " + "#" + (titleIdx-1)).removeClass("border_none").addClass("title_focus");
+
+        // 重排索引
+        $("#title li input").each(function (idx) {
+            $(this).attr("id", idx)
+        });
     }
 
     // 光标处插入文本
     function insert(str){
-        $("#" + titleFocusId).insertAtCaret(str);
+        var titleIdx = $(".title_focus").attr("id");
+        if(titleIdx == undefined)  return;
+        $("#title #" + titleIdx).insertAtCaret(str);
     }
 
     // 标题行获取焦点
     function titleLineFocus(ele){
-        titleFocusId = $(ele).attr("id");
-
         $("#title li input").each(function () {
             $(this).removeClass("title_focus").addClass("border_none")
         });
@@ -154,6 +171,11 @@
         $("#answer " + "#" + prevId).children("label").html(preOption + option);
         // 删除当前选项
         $("#answer " + "#" + optionIdx).remove();
+
+        // 重排索引
+        $("#answer li").each(function (idx) {
+            $(this).attr("id", idx)
+        });
     }
 
     // 完成选择
