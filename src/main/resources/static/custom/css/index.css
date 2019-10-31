@@ -39,7 +39,6 @@
 /* 按钮区 */
 #cnt #btns{
     float: left;
-    width: 130px;
     height: 100%;
     float: left;
     padding-top: 150px;
@@ -54,6 +53,7 @@
     font-weight: bold;
     margin-top: 20px;
     background-color: #CCE6FF;
+    margin-left: 5px;
 }
 
 #cnt #btns button:hover{

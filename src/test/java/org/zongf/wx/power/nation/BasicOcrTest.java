@@ -15,6 +15,8 @@ import org.zongf.wx.power.nation.thread.BasicOcrTask;
 import org.zongf.wx.power.nation.util.BaiduOcrUtil;
 import org.zongf.wx.power.nation.vo.ocr.OcrResponse;
 
+import javax.sound.midi.Soundbank;
+
 /**
  * @author: zongf
  * @created: 2019-10-27
@@ -52,6 +54,12 @@ public class BasicOcrTest {
     @Test
     public void batchAccurateOcr() throws Exception{
         this.imageService.batchAccurateOcr(ImageConstant.CATEGORY_QUESTION);
+    }
+
+    @Test
+    public void test(){
+        byte[] bytes = this.imageService.queryContent((long) 58);
+        OcrResponse ocrResponse = BaiduOcrUtil.doBasicAccurateOcr(bytes);
     }
 
 }
