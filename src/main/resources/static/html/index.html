@@ -49,6 +49,7 @@
             <p>
                 <button type="button" class="textbox" onclick="optionMergePre()">选项向上合并</button>
                 <button type="button" class="textbox" onclick="addOption()">添加选项</button>
+                <button type="button" class="textbox" onclick="addSortOption()">添加排序选项</button>
                 <button type="button" class="textbox" onclick="optionMoveUp()">选项上移</button>
             </p>
             <p>
@@ -94,9 +95,7 @@
         $("#title " + "#" + (titleIdx-1)).removeClass("border_none").addClass("title_focus");
 
         // 重排索引
-        $("#title li input").each(function (idx) {
-            $(this).attr("id", idx)
-        });
+        resetTitleIdx();
     }
 
     // 光标处插入文本
@@ -125,6 +124,35 @@
         });
     }
 
+    // 追加排序选项
+    function addSortOption(){
+        $.messager.prompt('添加选项', '输入排序顺序', function(option){
+            if (option){
+                // 移除所有空格
+                option = option.replace(/\s/g, "")
+                    .replace("1","①").replace("2","②").replace("3","③").replace("4","④").replace("5","⑤").replace("6","⑥").replace("7","⑦").replace("8","⑧").replace("9","⑨");
+                $('#answer').append("<li class='option_bg' onclick='selectAnswer(this)' ><label singleLine='false'>" + option + "</label></li>");
+                resetOptionIdx();
+            }
+        });
+    }
+
+    // 重排索引
+    function resetOptionIdx() {
+        // 重排索引
+        $("#answer li").each(function (idx) {
+            $(this).attr("id", idx)
+        });
+    }
+
+    // 重排索引
+    function resetTitleIdx() {
+        // 重排索引
+        $("#title li input").each(function (idx) {
+            $(this).attr("id", idx)
+        });
+    }
+
     // 选项向上移动
     function optionMoveUp() {
         // 获取选项索引
@@ -143,10 +171,9 @@
 
         // 元素交换位置
         $("#answer #" + optionIdx).insertBefore($("#answer #" + preOptionIdx));
-        // 交换索引值
-        $("#answer #" + optionIdx).attr("id", "optionTmp");
-        $("#answer #" + preOptionIdx).attr("id", optionIdx);
-        $("#answer #optionTmp").attr("id", preOptionIdx);
+
+        // 重排索引
+        resetOptionIdx();
     }
 
 
@@ -172,10 +199,8 @@
         // 删除当前选项
         $("#answer " + "#" + optionIdx).remove();
 
-        // 重排索引
-        $("#answer li").each(function (idx) {
-            $(this).attr("id", idx)
-        });
+        // 重排选项索引
+        resetOptionIdx();
     }
 
     // 完成选择
@@ -234,15 +259,19 @@
         // 初始化标题
         $('#title').empty();
         for (i = 0; i < result.titleLines; i++) {
-            $('#title').append("<li><input class='border_none' id='" + i +"' type='text' value='" + result.textLines[i] + "' onfocus='titleLineFocus(this)' ></li>")
+            $('#title').append("<li><input class='border_none' type='text' value='" + result.textLines[i] + "' onfocus='titleLineFocus(this)' ></li>")
         }
 
         // 初始化答案
         $('#answer').empty();
         for (i = result.titleLines; i < result.textLines.length; i++) {
             var idx = (i-result.titleLines);
-            $('#answer').append("<li class='option_bg' id='" + idx + "' onclick='selectAnswer(this)' ><label singleLine='false'>" + result.textLines[i] + "</label></li>")
+            $('#answer').append("<li class='option_bg' onclick='selectAnswer(this)' ><label singleLine='false'>" + result.textLines[i] + "</label></li>")
         }
+
+        // 重排选项索引
+        resetOptionIdx();
+        resetTitleIdx();
 
         // 设置剩余待处理数
         $('#lt').text(result.leftNum)
