@@ -41,7 +41,7 @@ public class BasicOcrTest {
         String imageDir = "G:\\study-app\\20191027";
 
         // 全部图片
-        imageDir = "F:\\study-app\\xxqg-imags";
+        imageDir = "G:\\study-app\\xxqg-imags";
 
         // 开始批量导入
         BasicOcrTask.doOcrTask(imageDir, ImageConstant.CATEGORY_QUESTION);

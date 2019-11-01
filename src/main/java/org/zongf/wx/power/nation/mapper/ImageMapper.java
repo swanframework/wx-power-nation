@@ -24,7 +24,7 @@ public interface ImageMapper {
     ImagePO queryContent(Long id);
 
     // 更新状态
-    boolean updateStatus(Long id, String status);
+    boolean updateStatus(@Param("id") Long id, @Param("status") String status);
 
     // 删除
     boolean delete(Long id);
@@ -43,9 +43,9 @@ public interface ImageMapper {
     boolean updateAccurateOcr(@Param("id") Long id, @Param("accurateOcr") String locOcr);
 
     // 查询下一条待做精确OCR 的记录
-    ImagePO queryNext(String category, String status);
+    ImagePO queryNext(@Param("category")String category, @Param("status")String status);
 
     // 查询数量
-    int queryCount(String category, String status);
+    int queryCount(@Param("category")String category, @Param("status")String status);
 
 }
