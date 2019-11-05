@@ -15,6 +15,12 @@
         values (null, #{imageId}, #{title}, #{titleLines}, #{answer}, #{answerIdx}, #{options}, #{createTime})
     </insert>
 
+    <update id="update">
+        UPDATE TABLE s_question
+        set id = #{id}, imageId=#{imageId}, title=#{title}, titleLines=#{titleLines},
+            answer = #{answer}, answerIdx = #{answerIdx}, options=#{options}
+    </update>
+
     <!-- 删除 -->
     <delete id="delete">
         delete from s_question where id = #{id}

@@ -32,4 +32,7 @@ public interface QuestionMapper {
     // 查询最新的num条数据
     List<QuestionPO> queryLatest(int num);
 
+    // 更新对象
+    boolean update(QuestionPO questionPO);
+
 }
