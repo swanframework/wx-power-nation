@@ -1,6 +1,7 @@
-create table `study-app`.s_image
+create table s_image
 (
-	id int auto_increment,
+	id int auto_increment
+		primary key,
 	content longblob null,
 	category char null,
 	basicOcr varchar(3000) null,
@@ -8,15 +9,15 @@ create table `study-app`.s_image
 	status char null,
 	createTime datetime null,
 	constraint s_image_id_uindex
-		unique (id)
-);
+	unique (id)
+)
+;
 
-alter table `study-app`.s_image
-	add primary key (id);
 
-create table `study-app`.s_question
+create table s_question
 (
-	id int auto_increment,
+	id int auto_increment
+		primary key,
 	imageId int not null,
 	title varchar(300) null,
 	titleLines int null,
@@ -25,11 +26,9 @@ create table `study-app`.s_question
 	createTime datetime null,
 	options varchar(1000) null,
 	constraint s_question_id_uindex
-		unique (id)
-);
-
-alter table `study-app`.s_question
-	add primary key (id);
-
-
+	unique (id),
+	constraint s_question_title_uindex
+	unique (title)
+)
+;
 
