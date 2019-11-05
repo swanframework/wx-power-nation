@@ -13,15 +13,18 @@ import java.util.Date;
 public class QuestionPO implements Serializable {
 
 	// 主键id
+	@JSONField(serialize = false)
 	private Long id;
 
 	// 图片id
+	@JSONField(serialize = false)
 	private Long imageId;
 
     // 题目
     private String title;
 
     // 题目行数
+	@JSONField(serialize = false)
     private int titleLines;
 
     // 答案
