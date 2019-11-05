@@ -28,16 +28,28 @@ public class QuestionExportTest {
     /** 到处文件 */
     @Test
     public void exportQuestion(){
-        String filePath = "sql/question.json";
+        String filePath = "sql/question.js";
+
+
 
         // 查询所有数据
         List<QuestionPO> questionPOList = this.questionMapper.queryAll();
 
+        for (QuestionPO questionPO : questionPOList) {
+            questionPO.setOptions(questionPO.getOptions().replaceAll(", ]", " ]"));
+        }
+
         // 数据转换为json 数据
         String content = JSONObject.toJSONString(questionPOList);
 
+        StringBuffer sb = new StringBuffer();
+        sb.append("let questionList = ");
+        sb.append(content);
+        sb.append(";");
+        sb.append("module.exports = { questionList };");
+
         // 写入文件
-        writeFile(content, filePath);
+        writeFile(sb.toString(), filePath);
     }
 
     /** 字符串写入文件 */
