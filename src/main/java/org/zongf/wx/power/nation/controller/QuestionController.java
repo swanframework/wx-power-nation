@@ -45,7 +45,13 @@ public class QuestionController {
 
         // 设置时间
         questionPO.setCreateTime(new Date());
-        boolean success = this.questionMapper.save(questionPO);
+        boolean success = false;
+
+        try {
+            this.questionMapper.save(questionPO);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
 
         // 更新图片状态
         ImagePO imagePO = this.imageService.queryInfo(questionPO.getImageId());
