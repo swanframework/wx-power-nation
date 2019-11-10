@@ -16,11 +16,13 @@
                 var startPos = $t.selectionStart;
                 var endPos = $t.selectionEnd;
                 var scrollTop = $t.scrollTop;
+                var select = $t.value.substring(startPos, endPos);
                 $t.value = $t.value.substring(0, startPos) + myValue + $t.value.substring(endPos, $t.value.length);
                 this.focus();
                 $t.selectionStart = startPos + myValue.length;
                 $t.selectionEnd = startPos + myValue.length;
                 $t.scrollTop = scrollTop;
+                return select;
             }
             else {
                 this.value += myValue;

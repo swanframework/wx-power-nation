@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 命名空间使用对应的Mapper类全限定名称 -->
+<mapper namespace="org.zongf.wx.power.nation.mapper.WeekQuestionMapper">
+
+    <!-- 定义所有字段 -->
+    <sql id="columns_all">
+         id, name, year, month, weekNo, createTime
+    </sql>
+
+    <!-- 新增 -->
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        insert into s_week_question(<include refid="columns_all" />)
+        values (null, #{name}, #{year}, #{month}, #{weekNo}, #{createTime})
+    </insert>
+
+    <!-- 删除 -->
+    <delete id="delete">
+        delete from s_week_question where id = #{id}
+    </delete>
+
+    <!-- 分页查询 -->
+    <select id="queryList" resultType="org.zongf.wx.power.nation.po.WeekQuestionPO">
+        select <include refid="columns_all" />
+        from s_week_question
+        where year = #{year} and month = #{month}
+        order by createTime desc
+    </select>
+
+</mapper>

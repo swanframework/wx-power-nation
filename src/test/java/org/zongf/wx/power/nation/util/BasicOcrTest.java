@@ -1,4 +1,4 @@
-package org.zongf.wx.power.nation;
+package org.zongf.wx.power.nation.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;

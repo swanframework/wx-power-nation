@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>挑战答题-题目解析</title>
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.7.0/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../jquery-easyui-1.7.0/themes/icon.css">
+    <script type="text/javascript" src="../jquery-easyui-1.7.0/jquery.min.js"></script>
+    <script type="text/javascript" src="../jquery-easyui-1.7.0/jquery.easyui.min.js"></script>
+    <!-- 自定义脚本和文件 -->
+    <link rel="stylesheet" type="text/css" href="../custom/css/special.css">
+    <script type="text/javascript" src="../custom/js/insertAtCaret.js"></script>
+</head>
+<body class="easyui-layout" style="width: 100%">
+
+    <!-- 左侧: 图片预览区 -->
+    <div id="left" data-options="region:'west',collapsible:false, title:'图片预览'">
+        <!-- 900x1600  -->
+        <img id="previewImg" src="../custom/images/special_01.png"><br/>
+        <div> 剩余:<label  id="lt"></label></div>
+    </div>
+
+    <!-- 右侧: 图片解析区 -->
+    <div id="cnt" data-options="region:'center',title:'解析结果'">
+
+
+        <div style="float: left">
+
+            <!-- 截屏边框 -->
+            <div id="border">
+
+                <div id="question"> <!-- 题目背景 -->
+                    <div class="head">
+                        <label class="head_left">填空题(10分)</label>
+                        <label class="head_right"><label class="seqNo">1</label> /10</label>
+                    </div>
+                    <ul id="title"></ul>
+                    <ul id="option"></ul>
+                </div>
+            </div>
+        </div>
+        <!-- 按钮区 -->
+        <div id="btns">
+            <div >
+                <div class="form">
+                    <div class="form_head">答案</div>
+                    <ul id="answers" class="answers">
+
+
+                    </ul>
+                    <div class="form_bottom">
+                        <div>
+                            <button type="button" class="textbox btn" onclick="insert('___')">新增</button>
+                            <button type="button" class="textbox btn" onclick="finish()" >完成</button>
+                            <button type="button" class="textbox btn" onclick="merge()">合并</button>
+                        </div>
+
+                        <div style="margin-top: 10px">
+                            <button type="button" class="textbox btn" onclick="insertSign('“”')">“”</button>
+                            <button type="button" class="textbox btn" onclick="insertSign('___、')">___、</button>
+                            <button type="button" class="textbox btn" onclick="insertSign('___。')">___。</button>
+                            <button type="button" class="textbox btn" onclick="insertSign('___；')">___；</button>
+                        </div>
+                        <div style="margin-top: 10px">
+                            <button type="button" class="textbox btn" onclick="insertSign('“”')">“”</button>
+                            <button type="button" class="textbox btn" onclick="insertSign('、')">、</button>
+                            <button type="button" class="textbox btn" onclick="insertSign('。')">。</button>
+                            <button type="button" class="textbox btn" onclick="insertSign('；')">；</button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript">
+    var imageInfo;
+
+    // 重排索引
+    function resetOptionIdx() {
+        // 重排索引
+        $("#option li").each(function (idx) {
+            $(this).attr("id", idx)
+        });
+    }
+
+    // 重排索引
+    function resetTitleIdx() {
+        // 重排索引
+        $("#title li input").each(function (idx) {
+            $(this).attr("id", idx)
+        });
+    }
+
+    // 光标处插入文本
+    function insert(str){
+        var titleIdx = $(".title_focus").attr("id");
+        if(titleIdx == undefined)  return;
+        var answer = $("#title #" + titleIdx).insertAtCaret(str);
+
+        if(imageInfo.type == '填空题'){
+            $('#answers').append('<li><input class="answer" value="' + answer + '"></input></li>')
+        }
+    }
+
+    function insertSign(str){
+        var titleIdx = $(".title_focus").attr("id");
+        if(titleIdx == undefined)  return;
+        $("#title #" + titleIdx).insertAtCaret(str);
+    }
+
+    // 光标处插入文本
+    function merge(str){
+        var titleIdx = $(".title_focus").attr("id");
+        if(titleIdx == undefined)  return;
+        var answer = $("#title #" + titleIdx).insertAtCaret("");
+
+        if(imageInfo.type == '填空题'){
+            var lastAnswer = $('#answers .answer:last-child');
+            lastAnswer.val(lastAnswer.val() + answer);
+        }
+    }
+
+    // 标题行获取焦点
+    function titleLineFocus(ele){
+        $("#title li input").each(function () {
+            $(this).removeClass("title_focus").addClass("border_none")
+        });
+        // 更改颜色
+        $(ele).removeClass("border_none").addClass("title_focus");
+    }
+
+    // 完成选择
+    function finish(){
+
+        // 拼接标题
+        var title = "";
+        $("#title li input").each(function () {
+            title += $(this).val().trim();
+        });
+
+        // 获取选项列表, 答案, 索引
+        var answers = [];
+        var options = [];
+        $("#answers .answer").each(function (idx) {
+            var val = $(this).val();
+            if(imageInfo.type == '填空题'){
+                answers[idx] = val;
+            }else {
+                answers[idx] = val.substr(2, val.length);
+                options[idx] =  val.substr(0, 1);
+            }
+        });
+
+        // 拼接请求串儿
+        var params = "title=" + title + "&answers=" + JSON.stringify(answers)
+            + "&weekId=" + imageInfo.weekId + "&type=" + imageInfo.type + "&seqNo=" + imageInfo.seqNo
+            + "&imageId=" + imageInfo.id;
+
+        if(imageInfo.type != '填空题'){
+            params = params + "&options=" + JSON.stringify(options)
+        }
+
+
+        // 处理特殊符号, %号不能进行传输
+        params = params.replace(/%/g, "###")
+
+        // 发送网络请求
+        $.ajax({
+            url:"/special/item",
+            method:"POST",
+            data: params,
+            success: function(result) {
+                window.location.reload();
+            }
+        })
+    }
+    
+    function initImage(result) {
+
+        // 替换图片
+        $('#previewImg').attr('src', "/image/special/content/" + result.id);
+
+        $(".seqNo").html(result.seqNo);
+
+        var titleLines = JSON.parse(result.titles);
+        // 初始化标题
+        $('#title').empty();
+        for (i = 0; i < titleLines.length; i++) {
+            $('#title').append("<li><input class='border_none' type='text' value='" + titleLines[i] + "' onfocus='titleLineFocus(this)' ></li>")
+        }
+
+        if(result.type != '填空题'){
+            var options = JSON.parse(result.options);
+            // 初始化答案
+            $('#option').empty();
+            for (i = 0; i < options.length; i++) {
+                $('#option').append("<li class='option_bg' onclick='selectAnswer(this)' ><label singleLine='false'>" + options[i] + "</label></li>")
+            }
+        }
+
+        resetTitleIdx();
+        resetOptionIdx();
+
+    }
+
+    // 加载图片
+    function loadImage(){
+        $.ajax({
+            url:"/image/special/todo",
+            method:"GET",
+            success: function(result) {
+                imageInfo = result;
+                if(result != null){
+                    initImage(result);
+                }
+            }
+        })
+    }
+
+    // 选择答案, 变更颜色
+    function selectAnswer(v){
+
+        // 已选中 -> 取消
+        if($(v).hasClass("answer_bg")){
+            $(v).removeClass("answer_bg").addClass("option_bg");
+
+            var answer = $(v).children("label").text();
+
+            $("#answers .answer").each(function () {
+                if($(this).val() == answer){
+                    $(this).remove();
+                }
+            });
+
+        }else{
+            // 取消 -> 已选中
+            $(v).removeClass("option_bg").addClass("answer_bg");
+
+            var answer = $(v).children("label").text();
+
+            $('#answers').append('<li><input class="answer" value="' + answer + '"></input></li>')
+        }
+
+    }
+
+
+    // 初始化加载
+    loadImage();
+
+</script>
+</html>

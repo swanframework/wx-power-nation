@@ -1,0 +1,199 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+/* 左侧预览区*/
+#left{
+    width:40%;
+    padding-top:35px;
+    text-align: right;
+    padding-right: 50px;
+    overflow: hidden;
+}
+
+#left img{
+    width: 360px;
+    height: 640px;
+}
+
+/* 预览区*/
+#cnt{
+    padding-left: 50px;
+}
+
+/* 模拟截图大小*/
+#cnt #border{
+    width: 360px;
+    height: 640px;
+    background-color: #F6F6F6;
+    margin: 0;
+}
+
+.head{
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    border-bottom: solid 1px #F5F6F7;
+}
+.head_left{
+    width: 50%;
+    float: left;
+    text-align: left;
+    padding-left: 20px;
+    font-weight: bold;
+    font-size: 16px;
+}
+.head_right{
+    width: 50%;
+    float: right;
+    text-align: right;
+    padding-right: 10px;
+    font-size: 12px;
+    color: #B3B4B6;
+}
+.seqNo{
+    color: #0C1219;
+    font-size: 26px;
+    font-weight: bold;
+}
+/* 按钮区 */
+#cnt #btns{
+    float: left;
+    height: 100%;
+    float: left;
+    padding-top: 80px;
+    padding-left: 20px;
+}
+
+/* 问题区域 */
+
+#question{
+    width: 330px;
+    height: 510px;
+    margin: 46px 15px 20px 15px;
+    background-color: #FFF;
+    border-radius: 5px;
+    text-align: center
+}
+
+/* 题目区域 */
+#question #title{
+    list-style: none;
+    padding-top: 20px;
+}
+
+#question #title li input{
+    width: 310px;
+    font-size: 15px;
+    margin-top: 5px;
+    height: 26px;
+    line-height: 26px;
+}
+
+/* 题目答案区 */
+#question #option{
+    list-style: none;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+#option li{ /* 答题选项*/
+    min-height: 60px;
+    line-height: 22px;
+
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: 400;
+    text-align: left;
+    padding-left: 20px;
+    padding: 11px 15px 11px 15px;
+
+    border-radius: 5px;
+
+}
+
+/* 正确答案颜色 */
+.answer_bg{
+    background-color:#F8F6F3;
+    border: solid 1px #C9B39E;
+    color: #C9B39E;
+    font-weight: bold;
+}
+.option_bg{
+    background-color: #FAFBFC;
+    color: #6D757C;
+    border: 1px solid #F3F4F6;
+}
+
+.title_focus{
+    border: solid 1px #00D4E5;
+}
+
+.border_none{
+    border: none;
+}
+
+.form{
+    width: 350px;
+    min-height: 250px;
+    border: solid 1px #BA9E83;
+    border-radius: 10px 10px 0 0;
+    position: relative;
+}
+
+.form_head{
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    color: #BA9E83;
+    background-color: #F6F6F6;
+    border-radius: 10px 10px 0 0;
+    height: 25px;
+    line-height: 25px;
+}
+
+.form_bottom{
+    width: 100%;
+    height: 105px;
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+    background-color:  #F6F6F6;
+    padding-top: 5px;
+}
+.btn{
+    width: 60px;
+    height: 25px;
+    margin-left: 15px;
+    border: solid 1px #BA9E83; ;
+
+}
+.btn:hover{
+    background-color: #BA9E83;
+}
+
+.answers{
+    list-style: none;
+    padding: 15px;
+}
+
+.answer{
+    padding-left: 15px;
+    height: 25px;
+    line-height: 25px;
+    width: 100%;
+    border: none;
+    margin-top: 5px;
+}
+
+.sign{
+    font-size: 18px;
+    width: 30px;
+    margin-left: 20px;
+}
+
+
+
+
+

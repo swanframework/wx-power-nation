@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 命名空间使用对应的Mapper类全限定名称 -->
+<mapper namespace="org.zongf.wx.power.nation.mapper.ImageWeekMapper">
+
+    <!-- 定义所有字段 -->
+    <sql id="columns_all">
+        id, weekId, type, seqNo, titles, options, content, status, createTime
+    </sql>
+    <update id="handleImage">
+        update s_image_week
+        set status = '1'
+        where id = #{id}
+    </update>
+
+    <!-- 查询图片信息, 不包含图片内容-->
+    <select id="queryInfo" resultType="org.zongf.wx.power.nation.po.ImageWeekPO">
+        select <include refid="columns_all" />
+        from s_image_week
+        where id = #{id}
+    </select>
+    <select id="queryNextTodo" resultType="org.zongf.wx.power.nation.po.ImageWeekPO">
+        select <include refid="columns_all" />
+        from s_image_week
+        where status = '0'
+        order by weekId asc, seqNo asc
+        limit 1
+    </select>
+
+    <!-- 新增 -->
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        insert into s_image_week(<include refid="columns_all" />)
+        values (null, #{weekId}, #{type}, #{seqNo}, #{titles}, #{options}, #{content}, #{status}, #{createTime})
+    </insert>
+
+
+</mapper>

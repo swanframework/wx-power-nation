@@ -1,4 +1,4 @@
-package org.zongf.wx.power.nation;
+package org.zongf.wx.power.nation.util;
 
 import com.sun.org.apache.xpath.internal.SourceTree;
 import org.apache.commons.lang3.StringUtils;

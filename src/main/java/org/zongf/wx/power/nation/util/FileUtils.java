@@ -57,8 +57,7 @@ public class FileUtils {
      * @author zongf
      * @created 2019-10-30
      */
-    public static byte[] getImageBytesWithoutHead(String filePath) {
-        int headHeight = 55;
+    public static byte[] getImageBytesWithoutHead(String filePath, int headHeight) {
         try {
             // 图片读取路径
             // 1.得到图片的输入流

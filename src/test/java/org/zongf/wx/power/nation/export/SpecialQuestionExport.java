@@ -1,4 +1,4 @@
-package org.zongf.wx.power.nation;
+package org.zongf.wx.power.nation.export;
 
 import com.alibaba.fastjson.JSONObject;
 import org.junit.Test;
@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.zongf.wx.power.nation.mapper.QuestionMapper;
+import org.zongf.wx.power.nation.mapper.SpecialQuestionMapper;
 import org.zongf.wx.power.nation.po.QuestionPO;
+import org.zongf.wx.power.nation.service.api.ISpecialQuestionService;
+import org.zongf.wx.power.nation.vo.SpecialQuestionVO;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -20,33 +23,27 @@ import java.util.List;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class QuestionExportTest {
+public class SpecialQuestionExport {
 
     @Autowired
-    private QuestionMapper questionMapper;
+    private ISpecialQuestionService specialQuestionService;
 
     /** 到处文件 */
     @Test
-    public void exportQuestion(){
-        String filePath = "sql/question.js";
+    public void export(){
+        String filePath = "sql/special.js";
 
+        List<SpecialQuestionVO> list = this.specialQuestionService.queryList(10);
 
-
-        // 查询所有数据
-        List<QuestionPO> questionPOList = this.questionMapper.queryAll();
-
-        for (QuestionPO questionPO : questionPOList) {
-            questionPO.setOptions(questionPO.getOptions().replaceAll(", ]", " ]"));
-        }
 
         // 数据转换为json 数据
-        String content = JSONObject.toJSONString(questionPOList);
+        String content = JSONObject.toJSONString(list);
 
         StringBuffer sb = new StringBuffer();
-        sb.append("let questionList = ");
-        sb.append(content);
-        sb.append(";");
-        sb.append("module.exports = { questionList };");
+        sb.append("let specialList = ").append("\n");
+        sb.append(content).append("\n");
+        sb.append(";").append("\n");
+        sb.append("module.exports = { specialList };");
 
         // 写入文件
         writeFile(sb.toString(), filePath);

@@ -1,4 +1,4 @@
-package org.zongf.wx.power.nation;
+package org.zongf.wx.power.nation.init;
 
 import org.junit.Test;
 import org.zongf.wx.power.nation.util.BaiduOcrUtil;
@@ -20,7 +20,7 @@ public class BaiduOcrUtilTest {
     @Test
     public void doBasicOcr() throws Exception{
 
-        OcrResponse basicOcrResponse = BaiduOcrUtil.doBasicOcr(FileUtils.getImageBytesWithoutHead(imgPath));
+        OcrResponse basicOcrResponse = BaiduOcrUtil.doBasicOcr(FileUtils.getImageBytesWithoutHead(imgPath, 55));
 
         System.out.println("\n\n***********************************\n\n");
         for (TextArea textArea : basicOcrResponse.getWords_result()) {
@@ -32,7 +32,7 @@ public class BaiduOcrUtilTest {
     @Test
     public void doBasicAccurateOcr() throws Exception{
 
-        OcrResponse basicOcrResponse = BaiduOcrUtil.doBasicAccurateOcr(FileUtils.getImageBytesWithoutHead(imgPath));
+        OcrResponse basicOcrResponse = BaiduOcrUtil.doBasicAccurateOcr(FileUtils.getImageBytesWithoutHead(imgPath, 55));
 
         System.out.println("\n\n***********************************\n\n");
         for (TextArea textArea : basicOcrResponse.getWords_result()) {
