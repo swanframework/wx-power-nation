@@ -37,7 +37,7 @@ public class WeekQuestionInit {
 
     @Test
     public void testOne() throws Exception{
-        parseSpecialFolder("C:\\Users\\zong\\Documents\\雷电模拟器\\Pictures\\Screenshots\\2019_11_1");
+        parseSpecialFolder("G:\\study-app\\week\\2019_11_2");
     }
 
 

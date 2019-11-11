@@ -1,4 +1,4 @@
-package org.zongf.wx.power.nation.util;
+package org.zongf.wx.power.nation.init;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
@@ -24,7 +24,7 @@ import javax.sound.midi.Soundbank;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class BasicOcrTest {
+public class QuestionInit {
 
     @Autowired
     private IImageService imageService;
@@ -41,7 +41,7 @@ public class BasicOcrTest {
         String imageDir = "G:\\study-app\\20191027";
 
         // 全部图片
-        imageDir = "C:\\Users\\zong\\Documents\\雷电模拟器\\Pictures\\Screenshots";
+        imageDir = "G:\\study-app\\question";
 
         // 开始批量导入
         BasicOcrTask.doOcrTask(imageDir, ImageConstant.CATEGORY_QUESTION);

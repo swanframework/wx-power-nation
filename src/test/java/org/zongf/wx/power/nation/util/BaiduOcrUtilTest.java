@@ -1,4 +1,4 @@
-package org.zongf.wx.power.nation.init;
+package org.zongf.wx.power.nation.util;
 
 import org.junit.Test;
 import org.zongf.wx.power.nation.util.BaiduOcrUtil;
