@@ -77,7 +77,7 @@ public class QuestionExportTest {
                 System.out.println(questionPO.getId() + ":");
                 System.out.println("    " + questionPO.getTitle());
                 for (SimilarResult result : similarResult) {
-                    System.out.println("    "+ result.getTitle() + result.getSimilar().toString().substring(0,4) + "-" + result.getIdx() + "-" );
+                    System.out.println("    "+ result.getTitle() + result.getSimilar().toString().substring(0,3) + "-" + result.getIdx() + "-" );
                 }
             }
         }
