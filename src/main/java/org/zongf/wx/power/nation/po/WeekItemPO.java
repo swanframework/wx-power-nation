@@ -23,6 +23,16 @@ public class WeekItemPO {
     // 选项
     private String options;
 
+    public WeekItemPO() {
+    }
+
+    public WeekItemPO(String type, int seqNo, String title, String answers) {
+        this.type = type;
+        this.seqNo = seqNo;
+        this.title = title;
+        this.answers = answers;
+    }
+
     public Long getId() {
         return id;
     }

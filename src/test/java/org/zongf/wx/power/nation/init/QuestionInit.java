@@ -38,10 +38,7 @@ public class QuestionInit {
         long start = System.currentTimeMillis();
 
         // 图片目录
-        String imageDir = "G:\\study-app\\20191027";
-
-        // 全部图片
-        imageDir = "G:\\study-app\\question";
+        String imageDir = "C:\\Users\\zong\\Documents\\雷电模拟器\\Pictures\\Screenshots";
 
         // 开始批量导入
         BasicOcrTask.doOcrTask(imageDir, ImageConstant.CATEGORY_QUESTION);

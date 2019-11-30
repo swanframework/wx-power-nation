@@ -23,6 +23,16 @@ public class SpecialItemPO {
     // 选项
     private String options;
 
+    public SpecialItemPO() {
+    }
+
+    public SpecialItemPO(String type, int seqNo, String title, String answers) {
+        this.type = type;
+        this.seqNo = seqNo;
+        this.title = title;
+        this.answers = answers;
+    }
+
     public Long getId() {
         return id;
     }

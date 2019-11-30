@@ -6,11 +6,14 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.zongf.wx.power.nation.SimilarResult;
+import org.zongf.wx.power.nation.StringSimilarUtil;
 import org.zongf.wx.power.nation.mapper.QuestionMapper;
 import org.zongf.wx.power.nation.po.QuestionPO;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 /** 数据库导出工具
@@ -28,7 +31,7 @@ public class QuestionExportTest {
     /** 到处文件 */
     @Test
     public void exportQuestion(){
-        String filePath = "sql/question.js";
+        String filePath = "sql/challenge.js";
 
 
 
@@ -43,10 +46,10 @@ public class QuestionExportTest {
         String content = JSONObject.toJSONString(questionPOList);
 
         StringBuffer sb = new StringBuffer();
-        sb.append("let questionList = ");
-        sb.append(content);
-        sb.append(";");
-        sb.append("module.exports = { questionList };");
+        sb.append("let challengeList = ").append("\n");
+        sb.append(content).append("\n");
+        sb.append(";").append("\n");
+        sb.append("module.exports = { challengeList };");
 
         // 写入文件
         writeFile(sb.toString(), filePath);
@@ -62,6 +65,36 @@ public class QuestionExportTest {
             ex.printStackTrace();
         }
     }
+
+    // 筛选相似度
+    @Test
+    public void testSimilar(){
+        List<QuestionPO> questionPOS = this.questionMapper.queryAll();
+
+        for (QuestionPO questionPO : questionPOS) {
+            List<SimilarResult> similarResult = getSimilarResult(questionPO, questionPOS);
+            if(similarResult.size() >0){
+                System.out.println(questionPO.getId() + ":");
+                System.out.println("    " + questionPO.getTitle());
+                for (SimilarResult result : similarResult) {
+                    System.out.println("    "+ result.getTitle() + result.getSimilar().toString().substring(0,4) + "-" + result.getIdx() + "-" );
+                }
+            }
+        }
+    }
+
+    public List<SimilarResult> getSimilarResult(QuestionPO questionPO, List<QuestionPO> list) {
+        List<SimilarResult> resultList = new ArrayList<>();
+        for (QuestionPO question : list) {
+            if(question.getId() == questionPO.getId()) continue;
+            double similar = StringSimilarUtil.similar(questionPO.getTitle(), question.getTitle());
+            if(similar > 0.96){
+                resultList.add(new SimilarResult(similar, question.getId(), question.getTitle()));
+            }
+        }
+        return resultList;
+    }
+
 
 
 
