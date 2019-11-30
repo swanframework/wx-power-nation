@@ -58,6 +58,11 @@ public class ToParserImgInfoFactory {
             textLines.remove(textLines.size() - 1);
         }
 
+        // 处理最后一行. 如果最后一行以出题:开头, 则移除
+        if (textLines.get(textLines.size() - 1).startsWith("推荐")) {
+            textLines.remove(textLines.size() - 1);
+        }
+
         // 计算标题行数
         int titleLines = 1;
         for (int i = 1; i < textLines.size(); i++) {
