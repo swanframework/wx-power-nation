@@ -54,9 +54,19 @@ public class WeekQuestionService implements IWeekQuestionService {
 
         List<MonthQuestionVO> monthList = new ArrayList<>();
 
-        monthList.add(queryMonthQuestion(0));
-        monthList.add(queryMonthQuestion(1));
-        monthList.add(queryMonthQuestion(2));
+        int preMonthIdx = 0;
+
+        // 查询当前月数据
+        MonthQuestionVO monthQuestionVO = queryMonthQuestion(preMonthIdx);
+
+        // 如果当前月为0,则从上个月开始
+        if (monthQuestionVO.getWeekList().size() == 0) {
+            preMonthIdx++;
+        }
+
+        monthList.add(queryMonthQuestion(preMonthIdx++));
+        monthList.add(queryMonthQuestion(preMonthIdx++));
+        monthList.add(queryMonthQuestion(preMonthIdx++));
 
         return monthList;
     }
