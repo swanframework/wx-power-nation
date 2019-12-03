@@ -50,9 +50,12 @@ public class ExportCloudData {
         // 查询每周答题数据
         List<MonthQuestionVO> monthList = this.weekQuestionService.queryList(10);
 
+        System.out.println("\n\n");
         System.out.println("challengeList:\n" + JSONObject.toJSONString(challengeList));
         System.out.println("monthList:\n" + JSONObject.toJSONString(monthList));
         System.out.println("specialList:\n" + JSONObject.toJSONString(specialList));
+        System.out.println("\n\n");
+
     }
 
     @Test
