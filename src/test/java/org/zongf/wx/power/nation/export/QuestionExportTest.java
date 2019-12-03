@@ -66,34 +66,7 @@ public class QuestionExportTest {
         }
     }
 
-    // 筛选相似度
-    @Test
-    public void testSimilar(){
-        List<QuestionPO> questionPOS = this.questionMapper.queryAll();
 
-        for (QuestionPO questionPO : questionPOS) {
-            List<SimilarResult> similarResult = getSimilarResult(questionPO, questionPOS);
-            if(similarResult.size() >0){
-                System.out.println(questionPO.getId() + ":");
-                System.out.println("    " + questionPO.getTitle());
-                for (SimilarResult result : similarResult) {
-                    System.out.println("    "+ result.getTitle() + result.getSimilar().toString().substring(0,3) + "-" + result.getIdx() + "-" );
-                }
-            }
-        }
-    }
-
-    public List<SimilarResult> getSimilarResult(QuestionPO questionPO, List<QuestionPO> list) {
-        List<SimilarResult> resultList = new ArrayList<>();
-        for (QuestionPO question : list) {
-            if(question.getId() == questionPO.getId()) continue;
-            double similar = StringSimilarUtil.similar(questionPO.getTitle(), question.getTitle());
-            if(similar > 0.96){
-                resultList.add(new SimilarResult(similar, question.getId(), question.getTitle()));
-            }
-        }
-        return resultList;
-    }
 
 
 

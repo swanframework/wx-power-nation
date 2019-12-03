@@ -16,9 +16,10 @@
     </insert>
 
     <update id="update">
-        UPDATE TABLE s_question
-        set id = #{id}, imageId=#{imageId}, title=#{title}, titleLines=#{titleLines},
+        UPDATE s_question
+        set imageId=#{imageId}, title=#{title}, titleLines=#{titleLines},
             answer = #{answer}, answerIdx = #{answerIdx}, options=#{options}
+        where id = #{id}
     </update>
 
     <!-- 删除 -->

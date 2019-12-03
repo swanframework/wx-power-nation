@@ -32,9 +32,9 @@ public class QuestionInit {
     @Autowired
     private ImageMapper imageMapper;
 
-    // 批量导入图片，并做基础的ocr
+    // 第1步: 图片做简单基本ocr
     @Test
-    public void batchImportImages() throws Exception{
+    public void step1_basicOcr() throws Exception{
         long start = System.currentTimeMillis();
 
         // 图片目录
@@ -47,16 +47,10 @@ public class QuestionInit {
         System.out.println("解析完成, 耗时:" + (end -start) + " ms");
     }
 
-    // 精准ocr
+    // 第2步: 对新导入图片做精准ocr
     @Test
-    public void batchAccurateOcr() throws Exception{
+    public void setp2_accurateOcr() throws Exception{
         this.imageService.batchAccurateOcr(ImageConstant.CATEGORY_QUESTION);
-    }
-
-    @Test
-    public void test(){
-        byte[] bytes = this.imageService.queryContent((long) 92);
-        OcrResponse ocrResponse = BaiduOcrUtil.doBasicAccurateOcr(bytes);
     }
 
 }
