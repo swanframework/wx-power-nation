@@ -36,7 +36,7 @@ public class SpecialQuestionInit {
 
     @Test
     public void testOne() throws Exception{
-        parseSpecialFolder("G:\\study-app\\special\\2019.12.03_2020.02.03_新时代公民道德建设实施纲要 (二)");
+        parseSpecialFolder("G:\\study-app\\special\\2019.12.13_2020.02.13_学习2019年中央经济工作会议精神");
     }
 
 
