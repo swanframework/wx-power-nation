@@ -198,8 +198,10 @@
             var options = JSON.parse(result.options);
             // 初始化答案
             $('#option').empty();
-            for (i = 0; i < options.length; i++) {
-                $('#option').append("<li class='option_bg' onclick='selectAnswer(this)' ><label singleLine='false'>" + options[i] + "</label></li>")
+            if(options != null){
+                for (i = 0; i < options.length; i++) {
+                    $('#option').append("<li class='option_bg' onclick='selectAnswer(this)' ><label singleLine='false'>" + options[i] + "</label></li>")
+                }
             }
         }
 

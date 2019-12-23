@@ -37,7 +37,7 @@ public class WeekQuestionInit {
 
     @Test
     public void testOne() throws Exception{
-        parseSpecialFolder("G:\\study-app\\week\\2019_12_3");
+        parseSpecialFolder("G:\\study-app\\week\\2019_12_4");
     }
 
 

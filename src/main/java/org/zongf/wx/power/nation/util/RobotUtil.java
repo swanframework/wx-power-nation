@@ -5,6 +5,7 @@ import org.zongf.wx.power.nation.exception.RobotException;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -44,6 +45,11 @@ public class RobotUtil {
         x = (int) (x / screenScacle);
         y = (int) (y / screenScacle);
 
+        // 控制鼠标移动
+        getRobot().mouseMove(x, y);
+    }
+
+    public static void moveMouseAt(int x, int y) {
         // 控制鼠标移动
         getRobot().mouseMove(x, y);
     }
@@ -106,6 +112,12 @@ public class RobotUtil {
         robot.mouseRelease(keyCode);
     }
 
+    public static void click(int keyCode) {
+        Robot robot = getRobot();
+        robot.keyRelease(keyCode);
+        robot.keyPress(keyCode);
+    }
+
     /** 模拟按键点击
      * @param x x轴坐标
      * @param y y轴坐标
@@ -117,6 +129,59 @@ public class RobotUtil {
 
         // 移动鼠标
         moveMouseAt(x, y, 1.0f);
+
+        // 点击
+        mouseClick(InputEvent.BUTTON1_MASK);
+    }
+
+    public static void mouseLeftDbClick(int x, int y) {
+
+        Robot robot = getRobot();
+        // 移动鼠标
+        robot.mouseMove(x, y);
+
+        // 双击
+        robot.mousePress(InputEvent.BUTTON1_MASK);
+        robot.mouseRelease(InputEvent.BUTTON1_MASK);
+        robot.mousePress(InputEvent.BUTTON1_MASK);
+        robot.mouseRelease(InputEvent.BUTTON1_MASK);
+
+    }
+
+    public static void copy(int x, int y) {
+        Robot robot = getRobot();
+        // 移动鼠标
+        robot.mouseMove(x, y);
+
+        // 双击
+        robot.mousePress(InputEvent.BUTTON1_MASK);
+        robot.mouseRelease(InputEvent.BUTTON1_MASK);
+
+        robot.keyPress(KeyEvent.VK_CONTROL);
+        robot.keyPress(KeyEvent.VK_V);
+        robot.keyRelease(KeyEvent.VK_V);
+        robot.keyRelease(KeyEvent.VK_CONTROL);
+    }
+
+    public static void scroll(int x) {
+        Robot robot = getRobot();
+        robot.mouseWheel(x);
+        robot.mousePress(InputEvent.BUTTON1_MASK);
+        robot.mouseRelease(InputEvent.BUTTON1_MASK);
+    }
+
+
+    /** 模拟按键点击
+     * @param x x轴坐标
+     * @param y y轴坐标
+     * @since 1.0
+     * @author zongf
+     * @created 2019-10-28
+     */
+    public static void mouseLeftClick(int x, int y, float screenScacle) {
+
+        // 移动鼠标
+        moveMouseAt(x, y, screenScacle);
 
         // 点击
         mouseClick(InputEvent.BUTTON1_MASK);

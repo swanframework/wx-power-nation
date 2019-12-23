@@ -44,11 +44,11 @@ public class ExportCloudData {
         }
 
         // 查询专项答题数据
-        List<SpecialQuestionVO> specialList = this.specialQuestionService.queryList(10);
+        List<SpecialQuestionVO> specialList = this.specialQuestionService.queryList(15);
 
 
         // 查询每周答题数据
-        List<MonthQuestionVO> monthList = this.weekQuestionService.queryList(10);
+        List<MonthQuestionVO> monthList = this.weekQuestionService.queryList(15);
 
         System.out.println("\n\n");
         System.out.println("challengeList:\n" + JSONObject.toJSONString(challengeList));
