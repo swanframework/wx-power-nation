@@ -28,6 +28,9 @@ import java.util.stream.Collectors;
 public class SpecialQuestionInit {
 
 
+    /** 图片头部高度 */
+    private final int IMAGE_HEAD_HEIGHT = 200;
+
     @Autowired
     private ImageSpecialMapper imageSpecialMapper;
 
@@ -36,7 +39,10 @@ public class SpecialQuestionInit {
 
     @Test
     public void testOne() throws Exception{
-        parseSpecialFolder("G:\\study-app\\special\\2019.12.20_2020.02.20_庆祝澳门回归祖国20周年");
+        String baseFolder = "G:\\study-app\\special\\";
+        String folderName = "2020.01.16_2020.03.16_学习十九届中央纪委四次全会精神";
+
+        parseSpecialFolder(baseFolder + folderName, true);
     }
 
 
@@ -53,13 +59,13 @@ public class SpecialQuestionInit {
 
         // 解析专项答题
         for (String filePath : fileList) {
-            parseSpecialFolder(filePath);
+            parseSpecialFolder(filePath, true);
         }
 
     }
 
     // 解析专项答题文件夹
-    public void parseSpecialFolder(String folderPath) throws Exception{
+    public void parseSpecialFolder(String folderPath, boolean saveToDb) throws Exception{
 
         // 获取文件路径
         List<String> fileList = Files.list(Paths.get(folderPath))
@@ -68,13 +74,16 @@ public class SpecialQuestionInit {
 
         // 解析对象
         SpecialQuestionPO specialQuestionPO = parseSpecialQuestionPO(folderPath);
-        this.specialQuestionMapper.save(specialQuestionPO);
+
+        if (saveToDb) {
+            this.specialQuestionMapper.save(specialQuestionPO);
+        }
 
         // 解析图片
         List<SpecialItemPO> itemList = new ArrayList<>();
         for(int i=0; i<fileList.size(); i++) {
 
-            byte[] fileBytes = FileUtils.getImageBytesWithoutHead(fileList.get(i), 350);
+            byte[] fileBytes = FileUtils.getImageBytesWithoutHead(fileList.get(i), IMAGE_HEAD_HEIGHT);
 
             // 调用百度ocr进行图片解析
             OcrResponse ocrResponse = BaiduOcrUtil.doBasicAccurateOcr(fileBytes);
@@ -87,8 +96,22 @@ public class SpecialQuestionInit {
             imageSpecialPO.setCreateTime(new Date());
 
             // 图片入库
-            this.imageSpecialMapper.save(imageSpecialPO);
+            if (saveToDb) {
+                this.imageSpecialMapper.save(imageSpecialPO);
+            }else {
+                print(imageSpecialPO);
+            }
         }
+
+    }
+
+    private void print(ImageSpecialPO imageSpecialPO) {
+
+        System.out.println("\n****************************************\n");
+
+        System.out.println("题目类型:" + imageSpecialPO.getType() + ", 题号:" + imageSpecialPO.getSeqNo());
+        System.out.println("题目:" + imageSpecialPO.getTitles());
+        System.out.println("选项:" + imageSpecialPO.getOptions());
 
     }
 

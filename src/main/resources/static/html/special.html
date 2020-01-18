@@ -31,7 +31,7 @@
 
                 <div id="question"> <!-- 题目背景 -->
                     <div class="head">
-                        <label class="head_left">填空题(10分)</label>
+                        <label class="head_left" id="type">填空题(10分)</label>
                         <label class="head_right"><label class="seqNo">1</label> /10</label>
                     </div>
                     <ul id="title"></ul>
@@ -186,6 +186,7 @@
         $('#previewImg').attr('src', "/image/special/content/" + result.id);
 
         $(".seqNo").html(result.seqNo);
+        $("#type").html(result.type);
 
         var titleLines = JSON.parse(result.titles);
         // 初始化标题
