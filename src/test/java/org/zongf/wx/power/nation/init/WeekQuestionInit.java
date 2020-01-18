@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.zongf.wx.power.nation.mapper.ImageWeekMapper;
-import org.zongf.wx.power.nation.mapper.SpecialQuestionMapper;
 import org.zongf.wx.power.nation.mapper.WeekQuestionMapper;
 import org.zongf.wx.power.nation.po.*;
 import org.zongf.wx.power.nation.util.BaiduOcrUtil;
@@ -28,6 +27,8 @@ import java.util.stream.Collectors;
 @SpringBootTest
 public class WeekQuestionInit {
 
+    /** 图片头部高度 */
+    private final int IMAGE_HEAD_HEIGHT = 200;
 
     @Autowired
     private ImageWeekMapper imageWeekMapper;
@@ -37,7 +38,8 @@ public class WeekQuestionInit {
 
     @Test
     public void testOne() throws Exception{
-        parseSpecialFolder("G:\\study-app\\week\\2019_12_4");
+        String folderPath = "G:\\study-app\\week\\2020_01_2";
+        parseSpecialFolder(folderPath, true);
     }
 
 
@@ -54,13 +56,13 @@ public class WeekQuestionInit {
 
         // 解析专项答题
         for (String filePath : fileList) {
-            parseSpecialFolder(filePath);
+            parseSpecialFolder(filePath, true);
         }
 
     }
 
     // 解析专项答题文件夹
-    public void parseSpecialFolder(String folderPath) throws Exception{
+    public void parseSpecialFolder(String folderPath, boolean saveToDb) throws Exception{
 
         // 获取文件路径
         List<String> fileList = Files.list(Paths.get(folderPath))
@@ -69,13 +71,16 @@ public class WeekQuestionInit {
 
         // 解析对象
         WeekQuestionPO weekQuestionPO = parseWeekQuestionPO(folderPath);
-        this.weekQuestionMapper.save(weekQuestionPO);
+
+        if (saveToDb) {
+            this.weekQuestionMapper.save(weekQuestionPO);
+        }
 
         // 解析图片
         List<SpecialItemPO> itemList = new ArrayList<>();
         for(int i=0; i<fileList.size(); i++) {
 
-            byte[] fileBytes = FileUtils.getImageBytesWithoutHead(fileList.get(i), 300);
+            byte[] fileBytes = FileUtils.getImageBytesWithoutHead(fileList.get(i), IMAGE_HEAD_HEIGHT);
 
             // 调用百度ocr进行图片解析
             OcrResponse ocrResponse = BaiduOcrUtil.doBasicAccurateOcr(fileBytes);
@@ -88,8 +93,21 @@ public class WeekQuestionInit {
             imageWeekPO.setCreateTime(new Date());
 
             // 图片入库
-            this.imageWeekMapper.save(imageWeekPO);
+            if (saveToDb) {
+                this.imageWeekMapper.save(imageWeekPO);
+            }else {
+                print(imageWeekPO);
+            }
         }
+    }
+
+    private void print(ImageWeekPO imageSpecialPO) {
+
+        System.out.println("\n****************************************\n");
+
+        System.out.println("题目类型:" + imageSpecialPO.getType() + ", 题号:" + imageSpecialPO.getSeqNo());
+        System.out.println("题目:" + imageSpecialPO.getTitles());
+        System.out.println("选项:" + imageSpecialPO.getOptions());
 
     }
 
