@@ -18,7 +18,7 @@ public class AutoSenderTest {
     private static final int item_height = 28;
     private static final int item_x = 1800;
 
-    private static final int list_y_start = 175;
+    private static final int list_y_start = 146;
     private static final int list_max = 30;
 
     private static final int input_x = 200;
@@ -31,25 +31,39 @@ public class AutoSenderTest {
         openGroup();
 
 
-        for (int i = 28; i < 40; i++) {
-            sleep(1000);
+        for (int i = 0; i < 300; i++) {
+            sleep(500);
             openGroup();
-            sleep(1000);
+            sleep(500);
             if(i <list_max){
                 RobotUtil.mouseLeftDbClick(item_x, list_y_start + item_height *i);
             }else {
                 RobotUtil.mouseLeftClick(item_x, list_y_start + item_height *list_max);
                 RobotUtil.scroll(1);
             }
-            sleep(1000);
-            // 复制
-            RobotUtil.copy(input_x, input_y);
+            sleep(500);
+
+            // 发送消息
+            sendMsg();
+
+            sleep(500);
+
+            // 删除会话
+            removeSession();
         }
+    }
+
+    @Test
+    public void testCopy(){
+        sleep(1000);
+        sendMsg();
     }
 
     private void sendMsg() {
         // 复制
         RobotUtil.copy(input_x, input_y);
+
+        RobotUtil.click(KeyEvent.VK_ENTER);
     }
 
 
