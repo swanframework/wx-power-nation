@@ -34,8 +34,9 @@ public class ExportCloudData {
     private IWeekQuestionService weekQuestionService;
 
 
+    // 导出真实数据
     @Test
-    public void test(){
+    public void exportReal(){
 
         // 查询挑战答题数据
         List<QuestionPO> challengeList = this.questionMapper.queryAll();
@@ -58,8 +59,9 @@ public class ExportCloudData {
 
     }
 
+    // 导出mock 数据
     @Test
-    public void testMock(){
+    public void exportMock(){
 
         // 查询挑战答题数据
         List<Integer> specialIdList = Arrays.asList(
